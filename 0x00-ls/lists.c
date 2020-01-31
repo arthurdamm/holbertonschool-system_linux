@@ -36,8 +36,11 @@ list_t *add_node_end(list_t **head, File *file)
 
 	if (!head || !new_node)
 		return (NULL);
+	_memset(new_node, 0, sizeof(*new_node));
 	if (file)
+	{
 		new_node->file = *file;
+	}
 	if (node)
 	{
 		while (node->next)
@@ -88,4 +91,26 @@ size_t print_list(const list_t *h)
 		i++;
 	}
 	return (i);
+}
+
+
+/**
+ * pop_list - pops head node of list
+ * @head: address of pointer to first node
+ *
+ * Return: value of popped node
+ */
+char *pop_list(list_t **head)
+{
+	list_t *node;
+	char *name;
+
+	if (!head || !*head)
+		return (0);
+
+	node = (*head)->next;
+	name = (*head)->file.name;
+	free(*head);
+	*head = node;
+	return (name);
 }

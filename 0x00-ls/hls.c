@@ -18,7 +18,8 @@ int main(int ac, char **args)
 		append_file(&param, *args);
 
 	filter_dirs_from_files(&param);
-	print_list(param.dirs);
+	print_files(&param);
+	print_dirs(&param);
 
 	free_param(&param);
 	return (EXIT_SUCCESS);
@@ -49,63 +50,9 @@ void ls(char *path)
 		return;
 	}
 	while ((read = readdir(dir)) != NULL)
-		printf("%s\t", read->d_name);
+		printf(">>%s\t", read->d_name);
 	printf("\n");
 	closedir(dir);
-}
-
-/**
- * append_file - parses arg and adds to files array
- * @param: the parameter struct
- * @name: the name of the file to parse
- */
-void append_file(Param *param, char *name)
-{
-	File *file;
-
-	if (param->files_i == param->files_size)
-	{
-		param->files = _realloc(param->files,
-								param->files_size * sizeof(File),
-								param->files_size * sizeof(File) * 2);
-		param->files_size *= 2;
-		if (!param->files)
-			return;
-	}
-	file = &param->files[param->files_i++];
-	file->name = name;
-	if (lstat(name, &file->stat))
-	{
-		error_cant_open(param, name);
-		return;
-	}
-	if (S_ISREG(file->stat.st_mode))
-	{
-		printf("[%s] is a regular file\n", name);
-	}
-	else if (S_ISDIR(file->stat.st_mode))
-	{
-		printf("[%s] is a directory\n", name);
-	}
-	else
-		printf("[%s] is OTHER\n", name);
-}
-
-/**
- * filter_dirs_from_files - transfers dirs from files array to queue
- * @param: the parameter struct
- */
-void filter_dirs_from_files(Param *param)
-{
-	size_t i;
-
-	for (i = 0; i < param->files_i; i++)
-	{
-		if (is_dir(&param->files[i]))
-		{
-			add_node(&param->dirs, &param->files[i]);
-		}
-	}
 }
 
 /**

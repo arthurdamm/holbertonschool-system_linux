@@ -10,7 +10,9 @@ void free_param(Param *param)
 		free(param->files);
 		param->files = NULL;
 
+	/*
 	if (param->dirs)
 		free_list(param->dirs);
 		param->dirs = NULL;
+	*/
 }

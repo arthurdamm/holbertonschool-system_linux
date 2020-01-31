@@ -47,6 +47,7 @@ typedef struct list_f
  * @files_size: the currently allocated size of files
  * @files_i: the next availble index in files array
  * @dirs: linked list queue of dirs
+ * @status: the return code
  */
 typedef struct Param
 {
@@ -56,18 +57,24 @@ typedef struct Param
 
 	list_t *dirs;
 
+	int status;
+
 } Param;
 
-#define PARAM_INIT {NULL, 0, 0, NULL}
+#define PARAM_INIT {NULL, 0, 0, NULL, 0}
 
 #include "string.h"
 #include "lists.h"
 
 /* hls.c */
 void ls(char *path);
-void append_file(Param *param, char *name);
-void filter_dirs_from_files(Param *param);
 int checkdir(char *path);
+
+/* files.c */
+void append_file(Param *param, char *name);
+void print_files(Param *param);
+void filter_dirs_from_files(Param *param);
+void print_dirs(Param *param);
 
 /* error.c */
 void error_cant_open(Param *param, char *name);
