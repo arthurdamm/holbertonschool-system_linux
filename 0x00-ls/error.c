@@ -12,3 +12,13 @@ void error_cant_open(Param *param, char *name)
 	sprintf(buf, "%s: cannot access '%s'", MYNAME, name);
 	perror(buf);
 }
+
+/**
+ * error - prints message for passed errno
+ * @code: the error number whose message to print
+ * Return: void
+ */
+void error(int code)
+{
+	(void)code;
+}

@@ -48,3 +48,44 @@ list_t *add_node_end(list_t **head, File *file)
 		*head = new_node;
 	return (new_node);
 }
+
+/**
+ * free_list - frees all nodes of a list
+ * @head: pointer to head node
+ *
+ * Return: void
+ */
+void free_list(list_t *head)
+{
+	list_t *node, *next_node;
+
+	if (!head)
+		return;
+
+	node = head;
+	while (node)
+	{
+		next_node = node->next;
+		free(node);
+		node = next_node;
+	}
+}
+
+/**
+ * print_list - prints a linked lists
+ * @h: pointer to first node
+ *
+ * Return: size of list
+ */
+size_t print_list(const list_t *h)
+{
+	size_t i = 0;
+
+	while (h)
+	{
+		printf("[%s]\n", h->file.name);
+		h = h->next;
+		i++;
+	}
+	return (i);
+}

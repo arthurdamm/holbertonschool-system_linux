@@ -1,7 +1,5 @@
 #include "hls.h"
 
-static File foo;
-
 /**
  * main - entry point
  * @ac: argument count
@@ -15,15 +13,14 @@ int main(int ac, char **args)
 	param.files = _realloc(NULL, 0, STARTING_FILES_SIZE * sizeof(File));
 	param.files_size = STARTING_FILES_SIZE;
 
-	foo.name = "fee";
-
 	(void)ac;
 	while (*++args)
-		parse_file(&param, *args);
+		append_file(&param, *args);
 
+	filter_dirs_from_files(&param);
+	print_list(param.dirs);
 
-
-	free(param.files);
+	free_param(&param);
 	return (EXIT_SUCCESS);
 }
 
@@ -58,11 +55,11 @@ void ls(char *path)
 }
 
 /**
- * parse_file - parses arg and adds to files array
+ * append_file - parses arg and adds to files array
  * @param: the parameter struct
  * @name: the name of the file to parse
  */
-void parse_file(Param *param, char *name)
+void append_file(Param *param, char *name)
 {
 	File *file;
 
@@ -76,6 +73,7 @@ void parse_file(Param *param, char *name)
 			return;
 	}
 	file = &param->files[param->files_i++];
+	file->name = name;
 	if (lstat(name, &file->stat))
 	{
 		error_cant_open(param, name);
@@ -93,6 +91,22 @@ void parse_file(Param *param, char *name)
 		printf("[%s] is OTHER\n", name);
 }
 
+/**
+ * filter_dirs_from_files - transfers dirs from files array to queue
+ * @param: the parameter struct
+ */
+void filter_dirs_from_files(Param *param)
+{
+	size_t i;
+
+	for (i = 0; i < param->files_i; i++)
+	{
+		if (is_dir(&param->files[i]))
+		{
+			add_node(&param->dirs, &param->files[i]);
+		}
+	}
+}
 
 /**
  * checkdir - checks is passed dir is valid

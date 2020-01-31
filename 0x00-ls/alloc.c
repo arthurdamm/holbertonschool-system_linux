@@ -29,3 +29,20 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 	free(ptr);
 	return (p);
 }
+
+/**
+ * _memset - fills buffer with constant byte
+ * @p: pointer to the buffer
+ * @b: the constant byte
+ * @n: size of buffer to fill
+ *
+ * Return: pointer to destination buffer
+ */
+void *_memset(void *p, char b, unsigned int n)
+{
+	char *start = p, *stop = start + n;
+
+	while (start < stop)
+		*start++ = b;
+	return (p);
+}
