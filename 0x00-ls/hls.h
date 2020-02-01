@@ -50,6 +50,7 @@ typedef struct list_f
  * @status: the return code
  * @multiple_dirs: true if printing headers for > 1 dirs
  * @printed_dir: true if already printed a dir before
+ * @options: the dash-separated command options
  */
 typedef struct Param
 {
@@ -62,10 +63,13 @@ typedef struct Param
 	int status;
 	int multiple_dirs;
 	int printed_dir;
+	int options;
 
 } Param;
 
-#define PARAM_INIT {NULL, 0, 0, NULL, EXIT_SUCCESS, 0, 0}
+#define PARAM_INIT {NULL, 0, 0, NULL, EXIT_SUCCESS, 0, 0, 0}
+
+#define OPTION_1 0x01
 
 #include "string.h"
 #include "lists.h"
@@ -82,6 +86,7 @@ void print_dirs(Param *param);
 
 /* error.c */
 void error_cant_open(Param *param, char *name);
+void error_bad_option(Param *param, char c);
 void error(int code);
 
 /* param.c */
@@ -89,6 +94,7 @@ void free_param(Param *param);
 
 /* utils.c */
 int is_dir(File *file);
+void parse_options(Param *param, char *arg);
 
 /* alloc.c */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);

@@ -15,6 +15,17 @@ void error_cant_open(Param *param, char *name)
 }
 
 /**
+ * error_bad_option - prints a bad option error
+ * @param: the parameter struct
+ * @c: the invalid option
+ */
+void error_bad_option(Param *param, char c)
+{
+	param->status = 2;
+	fprintf(stderr, "%s: invalid option -- '%c'\n", MYNAME, c);
+}
+
+/**
  * error - prints message for passed errno
  * @code: the error number whose message to print
  * Return: void

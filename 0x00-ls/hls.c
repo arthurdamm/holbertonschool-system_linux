@@ -13,11 +13,17 @@ int main(int ac, char **args)
 	param.files = _realloc(NULL, 0, STARTING_FILES_SIZE * sizeof(File));
 	param.files_size = STARTING_FILES_SIZE;
 
-	if (ac == 1)
-		append_file(&param, ".");
+	(void)ac;
 	while (*++args)
-		append_file(&param, *args);
+	{
+		if (**args == '-')
+			parse_options(&param, *args);
+		else
+			append_file(&param, *args);
+	}
 
+	if (!param.files_i)
+		append_file(&param, ".");
 	filter_dirs_from_files(&param);
 	print_files(&param);
 	print_dirs(&param);
@@ -58,9 +64,11 @@ void ls(Param *param, char *path)
 	while ((read = readdir(dir)) != NULL)
 	{
 		if (*read->d_name != '.')
-			printf("%s\t", read->d_name);
+			printf("%s%c", read->d_name,
+				param->options & OPTION_1 ? '\n' : '\t');
 	}
-	printf("\n");
+	if (!param->options & OPTION_1)
+		printf("\n");
 	closedir(dir);
 }
 

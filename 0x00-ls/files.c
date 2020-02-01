@@ -41,7 +41,8 @@ void print_files(Param *param)
 		if (!is_dir(&param->files[i]))
 		{
 			printf("%s%c", param->files[i].name,
-				i + 1 == param->files_i ? '\n' : '\t');
+				(i + 1 == param->files_i) || (param->options & OPTION_1) ?
+					'\n' : '\t');
 		}
 	}
 }
