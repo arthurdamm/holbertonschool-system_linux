@@ -13,6 +13,16 @@
 #define BUF_SIZE 1024
 #define STARTING_FILES_SIZE 1
 
+#define RUSR (file->stat.st_mode & S_IRUSR ? 'r' : '-')
+#define WUSR (file->stat.st_mode & S_IWUSR ? 'w' : '-')
+#define XUSR (file->stat.st_mode & S_IXUSR ? 'r' : '-')
+#define RGRP (file->stat.st_mode & S_IRGRP ? 'r' : '-')
+#define WGRP (file->stat.st_mode & S_IWGRP ? 'w' : '-')
+#define XGRP (file->stat.st_mode & S_IXGRP ? 'r' : '-')
+#define ROTH (file->stat.st_mode & S_IROTH ? 'r' : '-')
+#define WOTH (file->stat.st_mode & S_IWOTH ? 'w' : '-')
+#define XOTH (file->stat.st_mode & S_IXOTH ? 'r' : '-')
+
 /**
  * struct File - file info object
  * @name: base name of this file
@@ -72,19 +82,21 @@ typedef struct Param
 #define OPTION_1 0x01
 #define OPTION_a 0x02
 #define OPTION_A 0x04
+#define OPTION_l 0x08
 
 #include "string.h"
 #include "lists.h"
 
 /* hls.c */
-void ls(Param *param, char *path);
+int ls(Param *param, char *path);
 int checkdir(char *path);
 
 /* files.c */
 void append_file(Param *param, char *name);
-void print_files(Param *param);
+void print_files(Param *param, int omit_dirs);
 void filter_dirs_from_files(Param *param);
 void print_dirs(Param *param);
+void print_file_long(Param *param, File *file);
 
 /* error.c */
 void error_cant_open(Param *param, char *name);
@@ -93,10 +105,12 @@ void error(int code);
 
 /* param.c */
 void free_param(Param *param);
+void free_names(Param *param);
 
 /* utils.c */
 int is_dir(File *file);
 void parse_options(Param *param, char *arg);
+char *base_name(char *fullpath);
 
 /* alloc.c */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);

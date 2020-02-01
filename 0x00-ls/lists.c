@@ -40,6 +40,7 @@ list_t *add_node_end(list_t **head, File *file)
 	if (file)
 	{
 		new_node->file = *file;
+		new_node->file.name = _strdup(new_node->file.name);
 	}
 	if (node)
 	{

@@ -25,7 +25,7 @@ int main(int ac, char **args)
 	if (!param.files_i)
 		append_file(&param, ".");
 	filter_dirs_from_files(&param);
-	print_files(&param);
+	print_files(&param, 1);
 	print_dirs(&param);
 
 	free_param(&param);
@@ -36,42 +36,45 @@ int main(int ac, char **args)
  * ls - reads directory and lists contents
  * @param: the parameter struct
  * @path: the path to read
- * Return: void
+ * Return: 1 on error else 0
  */
-void ls(Param *param, char *path)
+int ls(Param *param, char *path)
 {
 	DIR *dir;
 	struct dirent *read;
-	char buf[BUF_SIZE] = {0};
+	char buf[BUF_SIZE];
 
 	if (!path)
-		return;
+		return (1);
 	dir = opendir(path);
 	if (!dir)
 	{
+		buf[0] = 0;
 		if (errno == ENOENT)
 			sprintf(buf, "%s: cannot access '%s'", MYNAME, path);
 		else if (errno == EACCES)
 			sprintf(buf, "%s: cannot open directory '%s'", MYNAME, path);
 		perror(buf);
 		param->status = 2;
-		return;
-	}
-	if (param->multiple_dirs)
-	{
-		printf("%s%s:\n", param->printed_dir++ ? "\n" : "", path);
+		return (1);
 	}
 	while ((read = readdir(dir)) != NULL)
 	{
 		if (*read->d_name != '.' || (param->options & OPTION_a) ||
 			((param->options & OPTION_A) && read->d_name[1]
 			&& read->d_name[1] != '.'))
-			printf("%s%c", read->d_name,
-				param->options & OPTION_1 ? '\n' : '\t');
+		{
+			buf[0] = 0;
+			_strcat(buf, path);
+			if (path[_strlen(path) - 1] != '/')
+				_strcat(buf, "/");
+			_strcat(buf, read->d_name);
+			/* fullpath = _strdup(buf); */
+			append_file(param, buf);
+		}
 	}
-	if (!(param->options & OPTION_1))
-		printf("\n");
 	closedir(dir);
+	return (0);
 }
 
 /**
