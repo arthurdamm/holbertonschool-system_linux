@@ -9,7 +9,7 @@
 #include <errno.h>
 #include <unistd.h>
 
-#define MYNAME "hs"
+#define MYNAME "hls"
 #define BUF_SIZE 1024
 #define STARTING_FILES_SIZE 1
 
@@ -48,6 +48,8 @@ typedef struct list_f
  * @files_i: the next availble index in files array
  * @dirs: linked list queue of dirs
  * @status: the return code
+ * @multiple_dirs: true if printing headers for > 1 dirs
+ * @printed_dir: true if already printed a dir before
  */
 typedef struct Param
 {
@@ -58,16 +60,18 @@ typedef struct Param
 	list_t *dirs;
 
 	int status;
+	int multiple_dirs;
+	int printed_dir;
 
 } Param;
 
-#define PARAM_INIT {NULL, 0, 0, NULL, 0}
+#define PARAM_INIT {NULL, 0, 0, NULL, EXIT_SUCCESS, 0, 0}
 
 #include "string.h"
 #include "lists.h"
 
 /* hls.c */
-void ls(char *path);
+void ls(Param *param, char *path);
 int checkdir(char *path);
 
 /* files.c */

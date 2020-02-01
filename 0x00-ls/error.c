@@ -8,7 +8,8 @@
 void error_cant_open(Param *param, char *name)
 {
 	char buf[BUF_SIZE] = {0};
-	(void)param;
+
+	param->status = 2;
 	sprintf(buf, "%s: cannot access '%s'", MYNAME, name);
 	perror(buf);
 }

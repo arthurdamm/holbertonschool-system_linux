@@ -23,18 +23,9 @@ void append_file(Param *param, char *name)
 	if (lstat(name, &file->stat))
 	{
 		error_cant_open(param, name);
+		param->files_i--; /* overwrite this entry so its initialized */
 		return;
 	}
-	if (S_ISREG(file->stat.st_mode))
-	{
-		printf("[%s] is a regular file\n", name);
-	}
-	else if (S_ISDIR(file->stat.st_mode))
-	{
-		printf("[%s] is a directory\n", name);
-	}
-	else
-		printf("[%s] is OTHER\n", name);
 }
 
 /**
@@ -49,7 +40,7 @@ void print_files(Param *param)
 	{
 		if (!is_dir(&param->files[i]))
 		{
-			printf(">%s%c", param->files[i].name,
+			printf("%s%c", param->files[i].name,
 				i + 1 == param->files_i ? '\n' : '\t');
 		}
 	}
@@ -81,9 +72,10 @@ void print_dirs(Param *param)
 	list_t *node = param->dirs;
 	char *name;
 
+	param->multiple_dirs = node && node->next;
 	while (node)
 	{
 		name = pop_list(&node);
-		ls(name);
+		ls(param, name);
 	}
 }

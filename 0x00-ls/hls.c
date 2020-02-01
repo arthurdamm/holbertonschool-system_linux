@@ -13,7 +13,8 @@ int main(int ac, char **args)
 	param.files = _realloc(NULL, 0, STARTING_FILES_SIZE * sizeof(File));
 	param.files_size = STARTING_FILES_SIZE;
 
-	(void)ac;
+	if (ac == 1)
+		append_file(&param, ".");
 	while (*++args)
 		append_file(&param, *args);
 
@@ -22,15 +23,16 @@ int main(int ac, char **args)
 	print_dirs(&param);
 
 	free_param(&param);
-	return (EXIT_SUCCESS);
+	return (param.status);
 }
 
 /**
  * ls - reads directory and lists contents
+ * @param: the parameter struct
  * @path: the path to read
  * Return: void
  */
-void ls(char *path)
+void ls(Param *param, char *path)
 {
 	DIR *dir;
 	struct dirent *read;
@@ -46,11 +48,18 @@ void ls(char *path)
 		else if (errno == EACCES)
 			sprintf(buf, "%s: cannot open directory '%s'", MYNAME, path);
 		perror(buf);
-		exit(2);
+		param->status = 2;
 		return;
 	}
+	if (param->multiple_dirs)
+	{
+		printf("%s%s:\n", param->printed_dir++ ? "\n" : "", path);
+	}
 	while ((read = readdir(dir)) != NULL)
-		printf(">>%s\t", read->d_name);
+	{
+		if (*read->d_name != '.')
+			printf("%s\t", read->d_name);
+	}
 	printf("\n");
 	closedir(dir);
 }
