@@ -7,7 +7,7 @@
 void free_param(Param *param)
 {
 	free_names(param);
-	
+
 	if (param->files)
 	{
 		free(param->files);
@@ -30,6 +30,7 @@ void free_param(Param *param)
 void free_names(Param *param)
 {
 	File *start = param->files, *stop = param->files + param->files_i;
+
 	for (; start < stop; start++)
 	{
 		if (start->name)

@@ -45,11 +45,12 @@ void parse_options(Param *param, char *arg)
 /**
  * base_name - returns pointer to base name of file
  * @fullpath: the full path file name
- * Returns: pointer to base name of string
+ * Return: pointer to base name of string
  */
 char *base_name(char *fullpath)
 {
 	char *p;
+
 	if (!fullpath)
 		return (NULL);
 	if (!*fullpath)

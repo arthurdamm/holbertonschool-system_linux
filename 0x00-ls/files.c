@@ -47,9 +47,9 @@ void print_files(Param *param, int omit_dirs)
 				print_file_long(param, &param->files[i]);
 				continue;
 			}
-			printf("%s%c", base_name(param->files[i].name),
+			printf("%s%s", base_name(param->files[i].name),
 				(i + 1 == param->files_i) || (param->options & OPTION_1) ?
-					'\n' : '\t');
+					"" : "\t");
 		}
 	}
 	free_names(param);
@@ -86,7 +86,7 @@ void print_dirs(Param *param)
 	while (node)
 	{
 		name = pop_list(&node);
-		if(ls(param, name))
+		if (ls(param, name))
 		{
 			free(name);
 			continue;
