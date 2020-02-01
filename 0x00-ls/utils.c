@@ -24,6 +24,12 @@ void parse_options(Param *param, char *arg)
 			case '1':
 				param->options |= OPTION_1;
 				break;
+			case 'a':
+				param->options |= OPTION_a;
+				break;
+			case 'A':
+				param->options |= OPTION_A;
+				break;
 			default:
 				error_bad_option(param, *arg);
 				free_param(param);

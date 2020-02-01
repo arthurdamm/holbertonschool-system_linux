@@ -70,6 +70,8 @@ typedef struct Param
 #define PARAM_INIT {NULL, 0, 0, NULL, EXIT_SUCCESS, 0, 0, 0}
 
 #define OPTION_1 0x01
+#define OPTION_a 0x02
+#define OPTION_A 0x04
 
 #include "string.h"
 #include "lists.h"
