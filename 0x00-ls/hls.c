@@ -63,7 +63,9 @@ void ls(Param *param, char *path)
 	}
 	while ((read = readdir(dir)) != NULL)
 	{
-		if (*read->d_name != '.' || (param->options & OPTION_a))
+		if (*read->d_name != '.' || (param->options & OPTION_a) ||
+			((param->options & OPTION_A) && read->d_name[1]
+			&& read->d_name[1] != '.'))
 			printf("%s%c", read->d_name,
 				param->options & OPTION_1 ? '\n' : '\t');
 	}
