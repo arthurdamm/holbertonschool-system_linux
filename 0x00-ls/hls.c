@@ -16,7 +16,7 @@ int main(int ac, char **args)
 
 	while (*++args)
 	{
-		if (**args == '-')
+		if (**args == '-' && *(*args + 1))
 		{
 			parse_options(&param, *args);
 			num_options++;
@@ -31,6 +31,7 @@ int main(int ac, char **args)
 			append_file(&param, ".");
 		filter_dirs_from_files(&param);
 		print_files(&param, 1);
+
 		print_dirs(&param);
 	}
 	free_param(&param);
