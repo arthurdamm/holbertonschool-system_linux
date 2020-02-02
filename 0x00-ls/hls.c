@@ -8,26 +8,31 @@
  */
 int main(int ac, char **args)
 {
+	int num_options = 0;
 	Param param = PARAM_INIT;
 
 	param.files = _realloc(NULL, 0, STARTING_FILES_SIZE * sizeof(File));
 	param.files_size = STARTING_FILES_SIZE;
 
-	(void)ac;
 	while (*++args)
 	{
 		if (**args == '-')
+		{
 			parse_options(&param, *args);
+			num_options++;
+		}
 		else
 			append_file(&param, *args);
 	}
 
-	if (!param.files_i)
-		append_file(&param, ".");
-	filter_dirs_from_files(&param);
-	print_files(&param, 1);
-	print_dirs(&param);
-
+	if (num_options + 1 == ac || param.files_i)
+	{
+		if (!param.files_i)
+			append_file(&param, ".");
+		filter_dirs_from_files(&param);
+		print_files(&param, 1);
+		print_dirs(&param);
+	}
 	free_param(&param);
 	return (param.status);
 }

@@ -38,20 +38,24 @@ void print_files(Param *param, int omit_dirs)
 {
 	size_t i;
 
+	param->printed_dir = 0;
 	for (i = 0; i < param->files_i; i++)
 	{
 		if (!omit_dirs || !is_dir(&param->files[i]))
 		{
+			param->printed_dir++;
 			if (param->options & OPTION_l)
 			{
 				print_file_long(param, &param->files[i]);
 				continue;
 			}
 			printf("%s%s", base_name(param->files[i].name),
-				(i + 1 == param->files_i) || (param->options & OPTION_1) ?
-					"" : "\t");
+				(param->options & OPTION_1) ? "\n" : "\t");
 		}
 	}
+	if (param->printed_dir && !(param->options & OPTION_1) &&
+		!(param->options & OPTION_l))
+		printf("\n");
 	free_names(param);
 	param->files_i = 0; /* reset the array */
 }
@@ -91,13 +95,11 @@ void print_dirs(Param *param)
 			free(name);
 			continue;
 		}
-		if (param->multiple_dirs)
+		if (param->multiple_dirs || param->printed_dir)
 			printf("%s%s:\n", param->printed_dir++ ? "\n" : "", name);
 		if (param->files_i != 0)
 		{
 			print_files(param, 0);
-			if (!(param->options & OPTION_1) && !(param->options & OPTION_l))
-				printf("\n");
 		}
 		free(name);
 	}
