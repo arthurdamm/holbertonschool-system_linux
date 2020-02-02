@@ -85,8 +85,11 @@ void print_dirs(Param *param)
 {
 	list_t *node = param->dirs;
 	char *name;
+	int first = 1;
 
 	param->multiple_dirs = node && node->next;
+	if (node && param->printed_dir)
+		printf("\n");
 	while (node)
 	{
 		name = pop_list(&node);
@@ -96,7 +99,15 @@ void print_dirs(Param *param)
 			continue;
 		}
 		if (param->multiple_dirs || param->printed_dir)
-			printf("%s%s:\n", param->printed_dir++ ? "\n" : "", name);
+		{
+			if (!first)
+			{
+				printf("\n");
+				first = 0;
+			}
+			printf("%s:\n", name);
+			first = 0;
+		}
 		if (param->files_i != 0)
 		{
 			print_files(param, 0);

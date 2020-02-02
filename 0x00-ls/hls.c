@@ -81,28 +81,3 @@ int ls(Param *param, char *path)
 	closedir(dir);
 	return (0);
 }
-
-/**
- * checkdir - checks is passed dir is valid
- * @path: the path to check
- * Return: 1 if valid else 0
- */
-int checkdir(char *path)
-{
-	DIR *dir;
-	char buf[BUF_SIZE] = {0};
-
-	if (!path)
-		return (0);
-	dir = opendir(path);
-	if (!dir)
-	{
-		if (errno == ENOENT)
-			sprintf(buf, "%s: cannot access '%s'", MYNAME, path);
-		else if (errno == EACCES)
-			sprintf(buf, "%s: cannot open directory '%s'", MYNAME, path);
-		perror(buf);
-		return (0);
-	}
-	return (1);
-}

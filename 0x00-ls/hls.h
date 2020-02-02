@@ -92,7 +92,6 @@ typedef struct Param
 
 /* hls.c */
 int ls(Param *param, char *path);
-int checkdir(char *path);
 
 /* files.c */
 void append_file(Param *param, char *name);
