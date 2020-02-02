@@ -96,7 +96,7 @@ void print_dirs(Param *param)
 		if (param->files_i != 0)
 		{
 			print_files(param, 0);
-			if (!(param->options & OPTION_1))
+			if (!(param->options & OPTION_1) && !(param->options & OPTION_l))
 				printf("\n");
 		}
 		free(name);
@@ -110,9 +110,13 @@ void print_dirs(Param *param)
  */
 void print_file_long(Param *param, File *file)
 {
+	struct passwd *usr = getpwuid(file->stat.st_uid);
+	struct group *grp = getgrgid(file->stat.st_gid);
+
 	(void)param;
-	printf("%c%c%c%c%c%c%c%c%c%c %s",
-		is_dir(file) ? 'd' : ' ',
+	printf("%c%c%c%c%c%c%c%c%c%c %lu %s %s %lu %s %s\n",
+		is_dir(file) ? 'd' : '-',
 		RUSR, WUSR, XUSR, RGRP, WGRP, XGRP, ROTH, WOTH, XOTH,
-		file->name);
+		file->stat.st_nlink, usr ? usr->pw_name : "", grp ? grp->gr_name : "",
+		file->stat.st_size, sprint_time(file), base_name(file->name));
 }

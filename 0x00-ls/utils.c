@@ -67,3 +67,20 @@ char *base_name(char *fullpath)
 	}
 	return (fullpath);
 }
+
+/**
+ * sprint_time - returns time string of file
+ * @file: the file in question
+ * Return: pointer to time string
+ */
+char *sprint_time(File *file)
+{
+	char *p = ctime(&(file->stat.st_mtime));
+
+	if (_strlen(p) >= 16)
+	{
+		p += 4;
+		p[12] = 0;
+	}
+	return (p);
+}

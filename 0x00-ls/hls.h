@@ -8,6 +8,9 @@
 #include <dirent.h>
 #include <errno.h>
 #include <unistd.h>
+#include <pwd.h>
+#include <grp.h>
+#include <time.h>
 
 #define MYNAME "hls"
 #define BUF_SIZE 1024
@@ -15,13 +18,13 @@
 
 #define RUSR (file->stat.st_mode & S_IRUSR ? 'r' : '-')
 #define WUSR (file->stat.st_mode & S_IWUSR ? 'w' : '-')
-#define XUSR (file->stat.st_mode & S_IXUSR ? 'r' : '-')
+#define XUSR (file->stat.st_mode & S_IXUSR ? 'x' : '-')
 #define RGRP (file->stat.st_mode & S_IRGRP ? 'r' : '-')
 #define WGRP (file->stat.st_mode & S_IWGRP ? 'w' : '-')
-#define XGRP (file->stat.st_mode & S_IXGRP ? 'r' : '-')
+#define XGRP (file->stat.st_mode & S_IXGRP ? 'x' : '-')
 #define ROTH (file->stat.st_mode & S_IROTH ? 'r' : '-')
 #define WOTH (file->stat.st_mode & S_IWOTH ? 'w' : '-')
-#define XOTH (file->stat.st_mode & S_IXOTH ? 'r' : '-')
+#define XOTH (file->stat.st_mode & S_IXOTH ? 'x' : '-')
 
 /**
  * struct File - file info object
@@ -111,6 +114,7 @@ void free_names(Param *param);
 int is_dir(File *file);
 void parse_options(Param *param, char *arg);
 char *base_name(char *fullpath);
+char *sprint_time(File *file);
 
 /* alloc.c */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
