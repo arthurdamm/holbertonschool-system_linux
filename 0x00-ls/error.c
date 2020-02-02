@@ -22,7 +22,7 @@ void error_cant_open(Param *param, char *name)
 void error_bad_option(Param *param, char c)
 {
 	param->status = 2;
-	fprintf(stdout, "%s: invalid option -- '%c'\n", MYNAME, c);
+	fprintf(stderr, "%s: invalid option -- '%c'\n", MYNAME, c);
 	fprintf(stderr, "Try '%s --help' for more information.\n", MYNAME);
 }
 
