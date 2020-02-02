@@ -56,9 +56,9 @@ int ls(Param *param, char *path)
 	{
 		buf[0] = 0;
 		if (errno == ENOENT)
-			sprintf(buf, "%s: cannot access '%s'", MYNAME, path);
+			sprintf(buf, "%s: cannot access %s", MYNAME, path);
 		else if (errno == EACCES)
-			sprintf(buf, "%s: cannot open directory '%s'", MYNAME, path);
+			sprintf(buf, "%s: cannot open directory %s", MYNAME, path);
 		perror(buf);
 		param->status = 2;
 		return (1);

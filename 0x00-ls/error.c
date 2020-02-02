@@ -10,7 +10,7 @@ void error_cant_open(Param *param, char *name)
 	char buf[BUF_SIZE] = {0};
 
 	param->status = 2;
-	sprintf(buf, "%s: cannot access '%s'", MYNAME, name);
+	sprintf(buf, "%s: cannot access %s", MYNAME, name);
 	perror(buf);
 }
 
