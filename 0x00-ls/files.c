@@ -37,6 +37,7 @@ void append_file(Param *param, char *name)
 void print_files(Param *param, int omit_dirs)
 {
 	size_t i;
+	int first = 1;
 
 	param->printed_dir = 0;
 	for (i = 0; i < param->files_i; i++)
@@ -49,9 +50,11 @@ void print_files(Param *param, int omit_dirs)
 				print_file_long(param, &param->files[i]);
 				continue;
 			}
-			printf("%s%s", omit_dirs ? param->files[i].name :
-				base_name(param->files[i].name),
-				(param->options & OPTION_1) ? "\n" : "\t");
+			if (!first)
+				printf("%s", (param->options & OPTION_1) ? "\n" : "\t");
+			first = 0;
+			printf("%s", omit_dirs ? param->files[i].name :
+				base_name(param->files[i].name));
 		}
 	}
 	if (param->printed_dir && !(param->options & OPTION_1) &&
