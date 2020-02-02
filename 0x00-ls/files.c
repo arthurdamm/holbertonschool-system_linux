@@ -14,9 +14,9 @@ void append_file(Param *param, char *name)
 		param->files = _realloc(param->files,
 								param->files_size * sizeof(File),
 								param->files_size * sizeof(File) * 2);
-		param->files_size *= 2;
 		if (!param->files)
 			return;
+		param->files_size *= 2;
 	}
 	file = &param->files[param->files_i++];
 	file->name = name;
@@ -49,7 +49,8 @@ void print_files(Param *param, int omit_dirs)
 				print_file_long(param, &param->files[i]);
 				continue;
 			}
-			printf("%s%s", base_name(param->files[i].name),
+			printf("%s%s", omit_dirs ? param->files[i].name :
+				base_name(param->files[i].name),
 				(param->options & OPTION_1) ? "\n" : "\t");
 		}
 	}
