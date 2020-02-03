@@ -57,7 +57,7 @@ void print_files(Param *param, int omit_dirs)
 				base_name(param->files[i].name));
 		}
 	}
-	if (param->printed_dir && !(param->options & OPTION_1) &&
+	if (param->printed_dir &&
 		!(param->options & OPTION_l))
 		printf("\n");
 	free_names(param);

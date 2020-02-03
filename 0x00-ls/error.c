@@ -23,7 +23,7 @@ void error_bad_option(Param *param, char c)
 {
 	param->status = 2;
 	fprintf(stderr, "%s: invalid option -- '%c'\n", MYNAME, c);
-	fprintf(stderr, "Try '%s --help' for more information.\n", MYNAME);
+	fprintf(stderr, "Try '%s --help' for more information.\n", "ls");
 }
 
 /**
