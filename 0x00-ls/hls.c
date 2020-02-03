@@ -25,6 +25,7 @@ int main(int ac, char **args)
 			append_file(&param, *args);
 	}
 
+	param.nonoption_argument = (num_options + 1 != ac);
 	if (num_options + 1 == ac || param.files_i)
 	{
 		if (!param.files_i)

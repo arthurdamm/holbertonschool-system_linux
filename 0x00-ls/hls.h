@@ -64,6 +64,7 @@ typedef struct list_f
  * @multiple_dirs: true if printing headers for > 1 dirs
  * @printed_dir: true if already printed a dir before
  * @options: the dash-separated command options
+ * @nonoption_argument: true if there was nonoption arg
  */
 typedef struct Param
 {
@@ -77,15 +78,20 @@ typedef struct Param
 	int multiple_dirs;
 	int printed_dir;
 	int options;
+	int nonoption_argument;
 
 } Param;
 
-#define PARAM_INIT {NULL, 0, 0, NULL, EXIT_SUCCESS, 0, 0, 0}
+#define PARAM_INIT {NULL, 0, 0, NULL, EXIT_SUCCESS, 0, 0, 0, 0}
 
 #define OPTION_1 0x01
 #define OPTION_a 0x02
 #define OPTION_A 0x04
 #define OPTION_l 0x08
+
+/* for convert_number() */
+#define CONVERT_LOWERCASE	1
+#define CONVERT_UNSIGNED	2
 
 #include "string.h"
 #include "lists.h"

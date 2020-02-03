@@ -102,7 +102,7 @@ void print_dirs(Param *param)
 			free(name);
 			continue;
 		}
-		if (param->multiple_dirs || param->printed_dir)
+		if (param->multiple_dirs || param->printed_dir || param->nonoption_argument)
 		{
 			if (!first)
 			{
