@@ -124,8 +124,8 @@ char *sprint_time(File *file);
 char *convert_number(long int num, int base, int flags);
 
 /* utils2.c */
-void print_file_long(Param *param, File *file);
-void get_long_format_field_sizes(Param *param, int *sizes, int omit_dirs);
+void print_file_long(Param *param, File *file, size_t *sizes);
+void get_long_format_field_sizes(Param *param, size_t *sizes, int omit_dirs);
 
 /* alloc.c */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);

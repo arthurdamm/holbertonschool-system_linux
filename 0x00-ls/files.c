@@ -39,9 +39,9 @@ void print_files(Param *param, int omit_dirs)
 {
 	size_t i;
 	int first = 1;
-	int sizes[3] = {0};
+	size_t sizes[3] = {0};
 
-	get_long_format_field_sizes(param, (int *)&sizes, omit_dirs);
+	get_long_format_field_sizes(param, (size_t *)&sizes, omit_dirs);
 	param->printed_dir = 0;
 	for (i = 0; i < param->files_i; i++)
 	{
@@ -50,7 +50,7 @@ void print_files(Param *param, int omit_dirs)
 			param->printed_dir++;
 			if (param->options & OPTION_l)
 			{
-				print_file_long(param, &param->files[i]);
+				print_file_long(param, &param->files[i], sizes);
 				continue;
 			}
 			if (!first)
