@@ -93,6 +93,8 @@ typedef struct Param
 #define CONVERT_LOWERCASE	1
 #define CONVERT_UNSIGNED	2
 
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
 #include "string.h"
 #include "lists.h"
 
@@ -120,6 +122,10 @@ int is_dir(File *file);
 void parse_options(Param *param, char *arg);
 char *base_name(char *fullpath);
 char *sprint_time(File *file);
+char *convert_number(long int num, int base, int flags);
+
+/* utils2.c */
+void get_long_format_field_sizes(Param *param, int *sizes, int omit_dirs);
 
 /* alloc.c */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);

@@ -22,6 +22,7 @@ void append_file(Param *param, char *name)
 	file->name = name;
 	if (lstat(name, &file->stat))
 	{
+		param->nonoption_argument++;
 		error_cant_open(param, name);
 		param->files_i--; /* overwrite this entry so its initialized */
 		return;
@@ -38,7 +39,9 @@ void print_files(Param *param, int omit_dirs)
 {
 	size_t i;
 	int first = 1;
+	int sizes[3] = {0};
 
+	get_long_format_field_sizes(param, (int *)&sizes, omit_dirs);
 	param->printed_dir = 0;
 	for (i = 0; i < param->files_i; i++)
 	{
@@ -77,6 +80,9 @@ void filter_dirs_from_files(Param *param)
 		if (is_dir(&param->files[i]))
 		{
 			add_node_end(&param->dirs, &param->files[i]);
+		} else
+		{
+			param->nonoption_argument++;
 		}
 	}
 }
