@@ -30,9 +30,9 @@ void print_file_long(Param *param, File *file, size_t *sizes)
 		file->stat.st_size, sprint_time(file), base_name(file->name));
 	if (S_ISLNK(file->stat.st_mode))
 	{
-		char buf[128] = {0};
+		char buf[256] = {0};
 
-		readlink(file->name, buf, 128);
+		readlink(file->name, buf, 256);
 		printf(" -> %s", buf);
 	}
 	printf("\n");

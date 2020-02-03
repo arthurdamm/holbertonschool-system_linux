@@ -118,9 +118,18 @@ void print_dirs(Param *param)
 			printf("%s:\n", name);
 			first = 0;
 		}
+		if (param->options & OPTION_R)
+		{
+			param->dirs = node;
+			print_list(param->dirs);
+			filter_dirs_from_files(param);
+			print_list(param->dirs);
+			if (!node)
+				node = param->dirs;
+		}
 		if (param->files_i != 0)
 		{
-			print_files(param, 0);
+			print_files(param, (param->options & OPTION_R));
 		}
 		free(name);
 	}
