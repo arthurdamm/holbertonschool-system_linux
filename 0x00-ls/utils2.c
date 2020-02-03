@@ -12,11 +12,21 @@ void print_file_long(Param *param, File *file, size_t *sizes)
 	struct group *grp = getgrgid(file->stat.st_gid);
 
 	(void)param;
-	printf("%c%c%c%c%c%c%c%c%c%c %lu %*s %*s %*lu %s %s\n",
+	printf("%c%c%c%c%c%c%c%c%c%c %lu ",
 		is_dir(file) ? 'd' : '-',
 		RUSR, WUSR, XUSR, RGRP, WGRP, XGRP, ROTH, WOTH, XOTH,
-		file->stat.st_nlink, (int)sizes[0], usr ? usr->pw_name : "",
-		(int)sizes[1], grp ? grp->gr_name : "", (int)sizes[2],
+		file->stat.st_nlink);
+
+	if (usr)
+		printf("%*s ", (int)sizes[0], usr->pw_name);
+	else
+		printf("%*u ", (int)sizes[0], file->stat.st_uid);
+
+	if (grp)
+		printf("%*s ", (int)sizes[1], grp->gr_name);
+	else
+		printf("%*u ", (int)sizes[1], file->stat.st_gid);
+	printf("%*lu %s %s\n", (int)sizes[2],
 		file->stat.st_size, sprint_time(file), base_name(file->name));
 }
 
