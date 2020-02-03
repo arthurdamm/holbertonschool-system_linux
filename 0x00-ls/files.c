@@ -108,7 +108,8 @@ void print_dirs(Param *param)
 			free(name);
 			continue;
 		}
-		if (param->multiple_dirs || param->printed_dir || param->nonoption_argument)
+		if (param->multiple_dirs || param->printed_dir ||
+			param->nonoption_argument || param->options & OPTION_R)
 		{
 			if (!first)
 			{
@@ -121,15 +122,13 @@ void print_dirs(Param *param)
 		if (param->options & OPTION_R)
 		{
 			param->dirs = node;
-			print_list(param->dirs);
 			filter_dirs_from_files(param);
-			print_list(param->dirs);
 			if (!node)
 				node = param->dirs;
 		}
 		if (param->files_i != 0)
 		{
-			print_files(param, (param->options & OPTION_R));
+			print_files(param, 0);
 		}
 		free(name);
 	}
