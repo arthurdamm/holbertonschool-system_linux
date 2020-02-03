@@ -125,21 +125,3 @@ void print_dirs(Param *param)
 		free(name);
 	}
 }
-
-/**
- * print_file_long - prints a single file according to options
- * @param: the parameter struct
- * @file: the file to print
- */
-void print_file_long(Param *param, File *file)
-{
-	struct passwd *usr = getpwuid(file->stat.st_uid);
-	struct group *grp = getgrgid(file->stat.st_gid);
-
-	(void)param;
-	printf("%c%c%c%c%c%c%c%c%c%c %lu %s %s %lu %s %s\n",
-		is_dir(file) ? 'd' : '-',
-		RUSR, WUSR, XUSR, RGRP, WGRP, XGRP, ROTH, WOTH, XOTH,
-		file->stat.st_nlink, usr ? usr->pw_name : "", grp ? grp->gr_name : "",
-		file->stat.st_size, sprint_time(file), base_name(file->name));
-}

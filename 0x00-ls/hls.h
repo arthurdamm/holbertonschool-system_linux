@@ -106,7 +106,6 @@ void append_file(Param *param, char *name);
 void print_files(Param *param, int omit_dirs);
 void filter_dirs_from_files(Param *param);
 void print_dirs(Param *param);
-void print_file_long(Param *param, File *file);
 
 /* error.c */
 void error_cant_open(Param *param, char *name);
@@ -125,6 +124,7 @@ char *sprint_time(File *file);
 char *convert_number(long int num, int base, int flags);
 
 /* utils2.c */
+void print_file_long(Param *param, File *file);
 void get_long_format_field_sizes(Param *param, int *sizes, int omit_dirs);
 
 /* alloc.c */

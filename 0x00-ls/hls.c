@@ -70,7 +70,7 @@ int ls(Param *param, char *path)
 	{
 		if (*read->d_name != '.' || (param->options & OPTION_a) ||
 			((param->options & OPTION_A) && read->d_name[1]
-			&& read->d_name[1] != '.'))
+			&& read->d_name[2]))
 		{
 			buf[0] = 0;
 			_strcat(buf, path);
