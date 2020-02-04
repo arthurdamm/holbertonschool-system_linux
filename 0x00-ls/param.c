@@ -14,6 +14,11 @@ void free_param(Param *param)
 		param->files = NULL;
 	}
 
+	if (param->sorted_files)
+	{
+		free(param->sorted_files);
+		param->sorted_files = NULL;
+	}
 	/*
 	* if (param->dirs)
 	* {

@@ -59,6 +59,7 @@ typedef struct list_f
  * @files: the array of files to process
  * @files_size: the currently allocated size of files
  * @files_i: the next availble index in files array
+ * @sorted_files: pointers to Files in sorted order
  * @dirs: linked list queue of dirs
  * @status: the return code
  * @multiple_dirs: true if printing headers for > 1 dirs
@@ -72,6 +73,8 @@ typedef struct Param
 	size_t files_size;
 	size_t files_i;
 
+	File **sorted_files;
+
 	list_t *dirs;
 
 	int status;
@@ -82,7 +85,7 @@ typedef struct Param
 
 } Param;
 
-#define PARAM_INIT {NULL, 0, 0, NULL, EXIT_SUCCESS, 0, 0, 0, 0}
+#define PARAM_INIT {NULL, 0, 0, NULL, NULL, EXIT_SUCCESS, 0, 0, 0, 0}
 
 #define OPTION_1 0x01
 #define OPTION_a 0x02
@@ -107,6 +110,7 @@ void append_file(Param *param, char *name);
 void print_files(Param *param, int omit_dirs);
 void filter_dirs_from_files(Param *param);
 void print_dirs(Param *param);
+void populate_sorted_files(Param *param);
 
 /* error.c */
 void error_cant_open(Param *param, char *name);
@@ -131,5 +135,8 @@ void get_long_format_field_sizes(Param *param, size_t *sizes, int omit_dirs);
 /* alloc.c */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 void *_memset(void *p, char b, unsigned int n);
+
+/* sort.c */
+void quick_sort(Param *param, File **array, size_t size);
 
 #endif

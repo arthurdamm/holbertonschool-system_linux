@@ -45,19 +45,19 @@ void print_files(Param *param, int omit_dirs)
 	param->printed_dir = 0;
 	for (i = 0; i < param->files_i; i++)
 	{
-		if (!omit_dirs || !is_dir(&param->files[i]))
+		if (!omit_dirs || !is_dir(param->sorted_files[i]))
 		{
 			param->printed_dir++;
 			if (param->options & OPTION_l)
 			{
-				print_file_long(param, &param->files[i], sizes);
+				print_file_long(param, param->sorted_files[i], sizes);
 				continue;
 			}
 			if (!first)
 				printf("%s", (param->options & OPTION_1) ? "\n" : "\t");
 			first = 0;
-			printf("%s", omit_dirs ? param->files[i].name :
-				base_name(param->files[i].name));
+			printf("%s", omit_dirs ? param->sorted_files[i]->name :
+				base_name(param->sorted_files[i]->name));
 		}
 	}
 	if (param->printed_dir &&
@@ -119,6 +119,7 @@ void print_dirs(Param *param)
 			printf("%s:\n", name);
 			first = 0;
 		}
+		populate_sorted_files(param);
 		if (param->options & OPTION_R)
 		{
 			param->dirs = node;
@@ -132,4 +133,32 @@ void print_dirs(Param *param)
 		}
 		free(name);
 	}
+}
+
+/**
+ * populate_sorted_files - makes file pointers to sort
+ * @param: the parameter struct
+ *
+ * Return: void
+ */
+void populate_sorted_files(Param *param)
+{
+	File *src, **dest;
+
+	if (param->sorted_files)
+	{
+		free(param->sorted_files);
+		param->sorted_files = NULL;
+	}
+	param->sorted_files = malloc(sizeof(File *) * param->files_i);
+	if (!param->sorted_files)
+		exit(2); /* TODO: check malloc */
+
+	src = param->files;
+	dest = param->sorted_files;
+	while (src < param->files + param->files_i)
+	{
+		*dest++ = src++;
+	}
+	quick_sort(param, param->sorted_files, param->files_i);
 }

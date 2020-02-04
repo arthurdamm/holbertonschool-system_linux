@@ -31,6 +31,7 @@ int main(int ac, char **args)
 	{
 		if (!param.files_i)
 			append_file(&param, ".");
+		populate_sorted_files(&param);
 		filter_dirs_from_files(&param);
 		print_files(&param, 1);
 
