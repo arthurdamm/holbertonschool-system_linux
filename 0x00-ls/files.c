@@ -37,13 +37,15 @@ void append_file(Param *param, char *name)
  */
 void print_files(Param *param, int omit_dirs)
 {
-	size_t i;
+	ssize_t i;
 	int first = 1;
 	size_t sizes[4] = {0};
 
 	get_long_format_field_sizes(param, (size_t *)&sizes, omit_dirs);
 	param->printed_dir = 0;
-	for (i = 0; i < param->files_i; i++)
+	for (i = param->options & OPTION_r ? param->files_i - 1 : 0;
+		param->options & OPTION_r ? i >= 0 : (unsigned long)i < param->files_i;
+		param->options & OPTION_r ? i-- : i++)
 	{
 		if (!omit_dirs || !is_dir(param->sorted_files[i]))
 		{

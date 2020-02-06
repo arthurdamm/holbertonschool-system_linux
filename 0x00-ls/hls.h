@@ -92,6 +92,7 @@ typedef struct Param
 #define OPTION_A 0x04
 #define OPTION_l 0x08
 #define OPTION_R 0x10
+#define OPTION_r 0x20
 
 /* for convert_number() */
 #define CONVERT_LOWERCASE	1
