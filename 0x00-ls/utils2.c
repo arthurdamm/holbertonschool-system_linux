@@ -13,7 +13,7 @@ void print_file_long(Param *param, File *file, size_t *sizes)
 
 	(void)param;
 	printf("%c%c%c%c%c%c%c%c%c%c %-*lu ",
-		is_dir(file) ? 'd' : '-',
+		is_dir(file) ? 'd' : S_ISLNK(file->stat.st_mode) ? 'l' : '-',
 		RUSR, WUSR, XUSR, RGRP, WGRP, XGRP, ROTH, WOTH, XOTH,
 		(int)sizes[0], file->stat.st_nlink);
 
