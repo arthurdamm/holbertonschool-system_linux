@@ -39,7 +39,7 @@ void print_files(Param *param, int omit_dirs)
 {
 	size_t i;
 	int first = 1;
-	size_t sizes[3] = {0};
+	size_t sizes[4] = {0};
 
 	get_long_format_field_sizes(param, (size_t *)&sizes, omit_dirs);
 	param->printed_dir = 0;
