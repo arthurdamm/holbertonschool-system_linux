@@ -51,7 +51,7 @@ size_t lomuto_partition(Param *param, File **array, size_t size, ssize_t lo,
 	File *pivot = array[hi];
 
 	for (i = j = lo; j < hi; j++)
-		if (compare(param, array[j], pivot) < 0)
+		if (compare(param, array[j], pivot) <= 0)
 			swap(array, size, &array[j], &array[i++]);
 	swap(array, size, &array[i], &array[hi]);
 
