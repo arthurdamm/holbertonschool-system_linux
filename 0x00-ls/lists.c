@@ -12,9 +12,14 @@ list_t *add_node(list_t **head, File *file)
 	list_t *new_head = malloc(sizeof(list_t));
 
 	if (!head || !new_head)
+	{
 		return (NULL);
+	}
 	if (file)
+	{
 		new_head->file = *file;
+		new_head->file.name = _strdup(new_head->file.name);
+	}
 
 	new_head->next = *head;
 	*head = new_head;

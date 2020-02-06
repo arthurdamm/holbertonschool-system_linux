@@ -81,7 +81,10 @@ void filter_dirs_from_files(Param *param)
 	{
 		if (is_dir(param->sorted_files[i]))
 		{
-			add_node_end(&param->dirs, param->sorted_files[i]);
+			if (param->options & OPTION_r)
+				add_node(&param->dirs, param->sorted_files[i]);
+			else
+				add_node_end(&param->dirs, param->sorted_files[i]);
 		} else
 		{
 			param->nonoption_argument++;
