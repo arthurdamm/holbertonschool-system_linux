@@ -10,14 +10,14 @@ void add_car(Car **head, int id)
 {
 	Car *node, *temp;
 
-	if (!*head)
+	if (!*head || id < (*head)->id)
 	{
 		node = malloc(sizeof(Car));
 		if (!node)
 			exit(EXIT_FAILURE);
 		node->id = id;
 		node->laps = 0;
-		node->next = NULL;
+		node->next = *head;
 		*head = node;
 		printf("Car %d joined the race\n", id);
 		return;
@@ -65,6 +65,6 @@ void race_state(int *id, size_t size)
 
 	printf("Race state:\n");
 	for (node = head; node; node = node->next)
-		printf("Car %d [%d laps]\n", node->id, node->laps);
+		printf("Car %d [%lu laps]\n", node->id, node->laps);
 
 }
