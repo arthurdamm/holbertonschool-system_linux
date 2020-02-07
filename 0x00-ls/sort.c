@@ -10,13 +10,20 @@
  */
 int compare(Param *param, File *a, File *b)
 {
+	ssize_t d;
+
 	if (param->options & OPTION_S)
 	{
-		ssize_t d = b->stat.st_size - a->stat.st_size;
-
+		d = b->stat.st_size - a->stat.st_size;
 		if (!d)
 			return (_strcmp(a->name, b->name));
 		return (d);
+	}
+	if (param->options & OPTION_t)
+	{
+		if (b->stat.st_mtime == a->stat.st_mtime)
+			return (_strcmp(a->name, b->name));
+		return (b->stat.st_mtime - a->stat.st_mtime);
 	}
 	return (_strcmp(a->name, b->name));
 }

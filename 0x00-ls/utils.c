@@ -42,6 +42,9 @@ void parse_options(Param *param, char *arg)
 		case 'S':
 			param->options |= OPTION_S;
 			break;
+		case 't':
+			param->options |= OPTION_t;
+			break;
 		default:
 			error_bad_option(param, *arg);
 			free_param(param);
