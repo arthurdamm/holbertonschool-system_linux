@@ -13,7 +13,7 @@
 typedef struct car
 {
 	int id;
-	int laps;
+	size_t laps;
 	struct car *next;
 } Car;
 
