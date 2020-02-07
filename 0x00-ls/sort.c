@@ -21,9 +21,13 @@ int compare(Param *param, File *a, File *b)
 	}
 	if (param->options & OPTION_t)
 	{
-		if (b->stat.st_mtime == a->stat.st_mtime)
-			return (_strcmp(a->name, b->name));
-		return (b->stat.st_mtime - a->stat.st_mtime);
+		if (b->stat.st_mtim.tv_sec == a->stat.st_mtim.tv_sec)
+		{
+			if (b->stat.st_mtim.tv_nsec == a->stat.st_mtim.tv_nsec)
+				return (_strcmp(a->name, b->name));
+			return (b->stat.st_mtim.tv_nsec - a->stat.st_mtim.tv_nsec);
+		}
+		return (b->stat.st_mtim.tv_sec - a->stat.st_mtim.tv_sec);
 	}
 	return (_strcmp(a->name, b->name));
 }
