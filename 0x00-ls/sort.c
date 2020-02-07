@@ -10,7 +10,14 @@
  */
 int compare(Param *param, File *a, File *b)
 {
-	(void)param;
+	if (param->options & OPTION_S)
+	{
+		ssize_t d = b->stat.st_size - a->stat.st_size;
+
+		if (!d)
+			return (_strcmp(a->name, b->name));
+		return (d);
+	}
 	return (_strcmp(a->name, b->name));
 }
 
