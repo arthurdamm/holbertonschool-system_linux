@@ -9,11 +9,32 @@
 char *_getline(const int fd)
 {
 	static FdBuf head;
-	FdBuf *fb = NULL;
-	char *line;
+	FdBuf *fb = NULL, *temp;
+	char *line = NULL;
 
+	DEBUG(printf("_getline() %d\n", fd));
+	if (fd == -1)
+	{
+		if (head.buf)
+			head.buf = (free(head.buf), NULL);
+		for (fb = head.next; fb;)
+		{
+			if (fb->buf)
+			{
+				free(fb->buf);
+				fb->buf = NULL;
+			}
+			temp = fb;
+			fb = fb->next;
+			free(temp);
+		}
+		head.next = NULL;
+		return (NULL);
+	}
 	fb = get_fdbuf(&head, fd);
-	line = read_buf(fb);
+	DEBUG(printf("fd [%d] [%p]\n", fb->fd, fb->buf));
+	if (fb)
+		line = read_buf(fb);
 	return (line);
 }
 
@@ -84,6 +105,7 @@ FdBuf *get_fdbuf(FdBuf *head, const int fd)
 	}
 	else if (fd < head->fd) /* need to copy head over and replace */
 	{
+		printf(">>> MALLOC!\n");
 		node = malloc(sizeof(*node));
 		if (!node)
 			exit(EXIT_FAILURE);
@@ -100,6 +122,7 @@ FdBuf *get_fdbuf(FdBuf *head, const int fd)
 	{
 		return (head);
 	}
+	printf(">>> MALLOC!\n");
 	node = malloc(sizeof(*node));
 	if (!node)
 		exit(EXIT_FAILURE);
