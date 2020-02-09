@@ -28,7 +28,7 @@ char *_getline(const int fd)
 			fb = fb->next;
 			free(temp);
 		}
-		head.next = NULL;
+		memset(&head, 0, sizeof(head));
 		return (NULL);
 	}
 	fb = get_fdbuf(&head, fd);
@@ -105,7 +105,6 @@ FdBuf *get_fdbuf(FdBuf *head, const int fd)
 	}
 	else if (fd < head->fd) /* need to copy head over and replace */
 	{
-		printf(">>> MALLOC!\n");
 		node = malloc(sizeof(*node));
 		if (!node)
 			exit(EXIT_FAILURE);
@@ -122,7 +121,6 @@ FdBuf *get_fdbuf(FdBuf *head, const int fd)
 	{
 		return (head);
 	}
-	printf(">>> MALLOC!\n");
 	node = malloc(sizeof(*node));
 	if (!node)
 		exit(EXIT_FAILURE);
