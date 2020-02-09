@@ -25,9 +25,10 @@ char *_getline(const int fd)
  */
 char *read_buf(FdBuf *fb)
 {
-	char buf[READ_SIZE + 1], *p = _strchr(fb->buf + fb->i, '\n'), *line;
+	char buf[READ_SIZE + 1], *p, *line;
 	ssize_t r = 0;
 
+	p = _strchr(fb->buf + fb->i, '\n', fb->len - fb->i);
 	DEBUG(printf("read_buf(): %d %p\n", fb->fd, fb->buf));
 	if (!fb->len || fb->i + 1 == fb->len || !p) /* need to fill buf */
 	{
@@ -37,25 +38,25 @@ char *read_buf(FdBuf *fb)
 			DEBUG(printf("Read: %ld\n", r));
 			if (r <= 0) /* EOF or error (errno set in that case)*/
 				return (NULL);
-			buf[r] = 0; /* insert nullchar for easy strcpy */
-			/* realloc fb->buf to accomodate #current bytes in buf +1 for \0 */
-			fb->buf = _realloc(fb->buf, fb->len, (fb->len ? fb->len : 1) + r);
+			fb->buf = _realloc(fb->buf, fb->len, fb->len + r + 1);
 			if (!fb->buf)
 				return (NULL);
-			fb->len = (fb->len ? fb->len : 1) + r;
-			strcpy(fb->buf, buf); /* copy from temp read buf to fb->buf */
-			p = _strchr(fb->buf, '\n');
-			if (p) /* loop until we see an endline */
+			memcpy(fb->buf + fb->len, buf, r);
+			fb->len += r;
+			p = _strchr(fb->buf + (fb->len - r), '\n', r);
+			if (p)
+			{
+				fb->buf[fb->len] = 0;
 				break;
+			}
 		}
 	}
 	DEBUG(printf("i was:%lu (%p) (%p) (%ld)\n", fb->i, fb->buf, p, p - fb->buf));
-	/* we have a buf with a newline pointed to by p */
 	*p = '\0';
 	line = strdup(fb->buf + fb->i);
 	fb->i = (p - fb->buf) + 1;
 	DEBUG(printf("fb-->i [%lu] fb->len [%lu]\n", fb->i, fb->len));
-	if (fb->i + 1 == fb->len)
+	if (fb->i == fb->len)
 	{
 		fb->i = fb->len = 0;
 		free(fb->buf);
@@ -114,16 +115,17 @@ FdBuf *get_fdbuf(FdBuf *head, const int fd)
  **_strchr - locates a character in a string
  *@s: the string to be parsed
  *@c: the character to look for
+ *@size: number of bytes to search
  *Return: (s) a pointer to the memory area s
  */
-char *_strchr(char *s, char c)
+char *_strchr(char *s, char c, ssize_t size)
 {
 	if (!s)
 		return (NULL);
 	do {
 		if (*s == c)
 			return (s);
-	} while (*s++ != '\0');
+	} while (*s++ != '\0' && --size > 0);
 
 	return (NULL);
 }
