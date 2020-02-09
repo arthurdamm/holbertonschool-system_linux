@@ -56,7 +56,7 @@ char *read_buf(FdBuf *fb)
 		{
 			r = read(fb->fd, buf, READ_SIZE);
 			if (r < 0 || (r == 0 && !fb->len))
-				return (NULL);
+				return (fb->buf ? (free(fb->buf), NULL) : NULL);
 			if (r == 0)
 			{
 				p = fb->buf + fb->len;
