@@ -74,16 +74,17 @@ char *read_buf(FdBuf *fb)
 	}
 	DEBUG(printf("i was:%lu (%p) (%p) (%ld)\n", fb->i, fb->buf, p, p - fb->buf));
 	*p = '\0';
-	line = strdup(fb->buf + fb->i);
+	line = malloc(1 + (p - (fb->buf + fb->i)));
+	if (!line)
+		return (NULL);
+	memcpy(line, fb->buf + fb->i, 1 + (p - (fb->buf + fb->i)));
 	fb->i = (p - fb->buf) + 1;
 	DEBUG(printf("fb-->i [%lu] fb->len [%lu]\n", fb->i, fb->len));
 	if (fb->i == fb->len)
 	{
 		fb->i = fb->len = 0;
-		free(fb->buf);
-		fb->buf = NULL;
+		fb->buf = (free(fb->buf), NULL);
 	}
-	DEBUG(printf("i is:%lu\n", fb->i));
 	return (line);
 }
 
@@ -146,8 +147,8 @@ char *_strchr(char *s, char c, ssize_t size)
 	do {
 		if (*s == c)
 			return (s);
-	} while (*s++ != '\0' && --size > 0);
-
+		s++;
+	} while (--size > 0);
 	return (NULL);
 }
 
