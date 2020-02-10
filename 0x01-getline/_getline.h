@@ -6,7 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define DO_DEBUG 1
+#define DO_DEBUG 0
 
 #if DO_DEBUG
 #define DEBUG(x) (x)
