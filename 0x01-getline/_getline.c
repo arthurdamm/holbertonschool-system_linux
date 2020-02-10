@@ -33,6 +33,8 @@ char *_getline(const int fd)
 	fb = get_fdbuf(&head, fd);
 	if (fb)
 		line = read_buf(fb);
+	if (line && line[0] == '\n' && !line[1])
+		line[0] = 0;
 	return (line);
 }
 

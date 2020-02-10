@@ -6,7 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define DO_DEBUG 0
+#define DO_DEBUG 1
 
 #if DO_DEBUG
 #define DEBUG(x) (x)
@@ -31,7 +31,7 @@ typedef struct fd
 	struct fd *next;
 } FdBuf;
 
-#define READ_SIZE 1
+#define READ_SIZE 1024
 
 char *_getline(const int fd);
 char *read_buf(FdBuf *fb);
