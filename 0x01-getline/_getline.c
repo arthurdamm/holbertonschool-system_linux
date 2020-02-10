@@ -12,7 +12,6 @@ char *_getline(const int fd)
 	FdBuf *fb = NULL, *temp;
 	char *line = NULL;
 
-	DEBUG(printf("_getline() %d\n", fd));
 	if (fd == -1)
 	{
 		if (head.buf)
@@ -32,7 +31,6 @@ char *_getline(const int fd)
 		return (NULL);
 	}
 	fb = get_fdbuf(&head, fd);
-	DEBUG(printf("get_fdbuf [%d] [%p]\n", fb->fd, fb->buf));
 	if (fb)
 		line = read_buf(fb);
 	return (line);
@@ -98,35 +96,27 @@ FdBuf *get_fdbuf(FdBuf *head, const int fd)
 {
 	FdBuf *node;
 
-	if (!head->buf)
+	if (!head->buf && !head->fd && !head->next)
 	{
-		head->buf = NULL;
 		head->fd = fd;
-		return (head);
-	}
-	else if (fd < head->fd) /* need to copy head over and replace */
-	{
-		node = malloc(sizeof(*node));
-		if (!node)
-			exit(EXIT_FAILURE);
-		memcpy(node, head, sizeof(*head));
-		memset(head, 0, sizeof(*head));
-		head->buf = NULL;
-		head->fd = fd;
-		head->next = node;
 		return (head);
 	}
 	for (; head->next && head->next->fd <= fd; head = head->next)
 		;
 	if (head->fd == fd)
-	{
 		return (head);
-	}
 	node = malloc(sizeof(*node));
 	if (!node)
-		exit(EXIT_FAILURE);
+		return (NULL);
+	if (fd < head->fd) /* need to copy head over and replace */
+	{
+		memcpy(node, head, sizeof(*head));
+		memset(head, 0, sizeof(*head));
+		head->fd = fd;
+		head->next = node;
+		return (head);
+	}
 	memset(node, 0, sizeof(*node));
-	node->buf = NULL;
 	node->fd = fd;
 	node->next = head->next;
 	head->next = node;
