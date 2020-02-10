@@ -31,7 +31,7 @@ typedef struct fd
 	struct fd *next;
 } FdBuf;
 
-#define READ_SIZE 32
+#define READ_SIZE 3
 
 char *_getline(const int fd);
 char *read_buf(FdBuf *fb);
