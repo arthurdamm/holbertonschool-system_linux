@@ -70,14 +70,16 @@ char UPPC(char c)
 }
 
 /**
- * _strcmp - performs lexicogarphic comparison of two strangs.
- * @s1: the first strang
- * @s2: the second strang
+ * _strcmp - performs lexicogarphic comparison of two strings.
+ * @s1: the first string
+ * @s2: the second string
  *
  * Return: negative if s1 < s2, positive if s1 > s2, zero if s1 == s2
  */
 int _strcmp(char *s1, char *s2)
 {
+	char *_s1 = s1, *_s2 = s2;
+
 	while (*s1 && *s2)
 	{
 		if (*s1 == '.')
@@ -96,7 +98,7 @@ int _strcmp(char *s1, char *s2)
 		s2++;
 	}
 	if (UPPC(*s1) == UPPC(*s2))
-		return (0);
+		return (_strcmpcase(_s1, _s2));
 	else
 		return (UPPC(*s1) < UPPC(*s2) ? -1 : 1);
 }

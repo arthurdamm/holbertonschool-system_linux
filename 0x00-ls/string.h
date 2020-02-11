@@ -11,5 +11,6 @@ int _strcmp(char *s1, char *s2);
 
 /* string2.c */
 char *starts_with(const char *haystack, const char *needle);
+int _strcmpcase(char *s1, char *s2);
 
 #endif
