@@ -80,6 +80,16 @@ int _strcmp(char *s1, char *s2)
 {
 	while (*s1 && *s2)
 	{
+		if (*s1 == '.')
+		{
+			s1++;
+			continue;
+		}
+		if (*s2 == '.')
+		{
+			s2++;
+			continue;
+		}
 		if (UPPC(*s1) != UPPC(*s2))
 			return (UPPC(*s1) - UPPC(*s2));
 		s1++;
