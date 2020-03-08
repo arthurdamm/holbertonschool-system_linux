@@ -1,12 +1,12 @@
 #include "_getline.h"
 
 /**
- * _getline - gets a line of chars from a file descriptor
+ * __getline - gets a line of chars from a file descriptor
  * @fd: the file descriptor to read
  *
  * Return: pointer to the line
  */
-char *_getline(const int fd)
+char *__getline(const int fd)
 {
 	static FdBuf head;
 	FdBuf *fb = NULL, *temp;
@@ -49,7 +49,7 @@ char *read_buf(FdBuf *fb)
 	char buf[READ_SIZE + 1], *p, *line;
 	ssize_t r = 0;
 
-	p = _strchr(fb->buf + fb->i, '\n', fb->len - fb->i);
+	p = __strchr(fb->buf + fb->i, '\n', fb->len - fb->i);
 	if (!fb->len || fb->i >= fb->len || !p)
 	{
 		while (1)
@@ -66,7 +66,7 @@ char *read_buf(FdBuf *fb)
 			if (!fb->buf)
 				return (NULL);
 			memcpy(fb->buf + fb->len, buf, r), fb->len += r;
-			p = _strchr(fb->buf + (fb->len - r), '\n', r);
+			p = __strchr(fb->buf + (fb->len - r), '\n', r);
 			if (p)
 			{
 				fb->buf[fb->len] = 0;
@@ -126,13 +126,13 @@ FdBuf *get_fdbuf(FdBuf *head, const int fd)
 }
 
 /**
- **_strchr - locates a character in a string
+ **__strchr - locates a character in a string
  *@s: the string to be parsed
  *@c: the character to look for
  *@size: number of bytes to search
  *Return: (s) a pointer to the memory area s
  */
-char *_strchr(char *s, char c, ssize_t size)
+char *__strchr(char *s, char c, ssize_t size)
 {
 	if (!s)
 		return (NULL);
@@ -142,34 +142,4 @@ char *_strchr(char *s, char c, ssize_t size)
 		s++;
 	} while (--size > 0);
 	return (NULL);
-}
-
-/**
- * _realloc - reallocates a block of memory
- * @ptr: pointer to previous malloc'ated block
- * @old_size: byte size of previous block
- * @new_size: byte size of new block
- *
- * Return: pointer to da ol'block nameen.
- */
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
-{
-	char *p;
-
-	if (!ptr)
-		return (malloc(new_size));
-	if (!new_size)
-		return (free(ptr), NULL);
-	if (new_size == old_size)
-		return (ptr);
-
-	p = malloc(new_size);
-	if (!p)
-		return (NULL);
-
-	old_size = old_size < new_size ? old_size : new_size;
-	while (old_size--)
-		p[old_size] = ((char *)ptr)[old_size];
-	free(ptr);
-	return (p);
 }
