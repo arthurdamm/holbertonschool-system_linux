@@ -9,7 +9,7 @@ if __name__ == "__main__":
     if len(argv) < 4:
         stdout.write(USAGE)
         exit(1)
-    if not len(argv[2]) or not len(argv[3]) or len(argv[2]) < len(argv[3]):
+    if len(argv[2]) < len(argv[3]):
         stdout.write(USAGE)
         exit(1)
     heap_start = None
