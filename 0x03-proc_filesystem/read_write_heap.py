@@ -9,7 +9,9 @@ if __name__ == "__main__":
     if len(argv) < 4:
         stderr.write(USAGE)
         exit(1)
-
+    if not len(argv[2]) or not len(argv[3]) or len(argv[2]) < len(argv[3]):
+        stderr.write("Invalid strings.\n")
+        exit(1)
     heap_start = None
     try:
         with open("/proc/{:d}/maps".format(int(argv[1])), "r") as file:
