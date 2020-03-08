@@ -1,18 +1,14 @@
 #!/usr/bin/python3
 """Finds & overwrites a string in a process' mem file"""
 
-from sys import argv, stdout
+from sys import argv
 
-USAGE = "USAGE: read_write_heap.py pid search_string replace_string\n"
+USAGE = "USAGE: read_write_heap.py pid search_string replace_string"
 
 if __name__ == "__main__":
-    if len(argv) < 4:
-        stdout.write(USAGE)
-        exit(1)
-    if len(argv[2]) < len(argv[3]):
-        stdout.write(USAGE)
-        exit(1)
-    heap_start = None
+    if len(argv) < 4 or len(argv[2]) < len(argv[3]):
+        print(USAGE) or exit(1)
+    heap_start = heap_stop = None
     try:
         with open("/proc/{:d}/maps".format(int(argv[1])), "r") as file:
             for line in file:
@@ -20,11 +16,9 @@ if __name__ == "__main__":
                     heap_start, heap_stop = \
                         [int(x, 16) for x in line.split(" ")[0].split("-")]
     except Exception as e:
-        stdout.write(str(e) + "\n")
-        exit(1)
+        print(e) or exit(1)
     if not heap_start or not heap_stop:
-        stdout.write("[ERROR] Heap address not found.\n")
-        exit(1)
+        print("[ERROR] Heap address not found.") or exit(1)
     print("[*] Heap starts at {:02X}".format(heap_start))
     try:
         with open("/proc/{:d}/mem".format(int(argv[1])), "rb") as f:
@@ -40,9 +34,8 @@ if __name__ == "__main__":
                 written = f.write(argv[3].encode() + b'\x00')
                 print("[*] {:d} bytes written!".format(written))
         else:
-            stdout.write(
-                "[ERROR] String '{:s}' not found in heap.\n".format(argv[2]))
+            print(
+                "[ERROR] String '{:s}' not found in heap.".format(argv[2]))
             exit(1)
     except Exception as e:
-        stdout.write(str(e) + "\n")
-        exit(1)
+        print(e) or exit(1)
