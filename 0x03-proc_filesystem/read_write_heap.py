@@ -1,16 +1,16 @@
 #!/usr/bin/python3
 """Finds & overwrites a string in a process' mem file"""
 
-from sys import argv, stderr
+from sys import argv, stdout
 
 USAGE = "USAGE: read_write_heap.py pid search_string replace_string\n"
 
 if __name__ == "__main__":
     if len(argv) < 4:
-        stderr.write(USAGE)
+        stdout.write(USAGE)
         exit(1)
     if not len(argv[2]) or not len(argv[3]) or len(argv[2]) < len(argv[3]):
-        stderr.write(USAGE)
+        stdout.write(USAGE)
         exit(1)
     heap_start = None
     try:
@@ -20,10 +20,10 @@ if __name__ == "__main__":
                     heap_start, heap_stop = \
                         [int(x, 16) for x in line.split(" ")[0].split("-")]
     except Exception as e:
-        stderr.write(str(e) + "\n")
+        stdout.write(str(e) + "\n")
         exit(1)
     if not heap_start or not heap_stop:
-        stderr.write("[ERROR] Heap address not found.\n")
+        stdout.write("[ERROR] Heap address not found.\n")
         exit(1)
     print("[*] Heap starts at {:02X}".format(heap_start))
     try:
@@ -40,9 +40,9 @@ if __name__ == "__main__":
                 written = f.write(argv[3].encode() + b'\x00')
                 print("[*] {:d} bytes written!".format(written))
         else:
-            stderr.write(
+            stdout.write(
                 "[ERROR] String '{:s}' not found in heap.\n".format(argv[2]))
             exit(1)
     except Exception as e:
-        stderr.write(str(e) + "\n")
+        stdout.write(str(e) + "\n")
         exit(1)
