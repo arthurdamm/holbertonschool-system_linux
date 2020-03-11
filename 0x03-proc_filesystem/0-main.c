@@ -15,7 +15,7 @@ int main(void)
 
 	/* allocate a duplicate of our string literal "Holberton School" */
 	s = strdup("Holberton School");
-	if (s == NULL) /* check if the allocation failed for any resason */
+	if (s == NULL) /* check if the allocation failed for any reason */
 	{
 		fprintf(stderr, "Can't allocate mem with malloc\n");
 		return (EXIT_FAILURE);
