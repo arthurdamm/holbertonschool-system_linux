@@ -21,10 +21,12 @@ int print_machine(Elf64_Ehdr *elf_header)
  * @elf_header: address of elf header struct
  * Return: 0 on success else exit_status
  */
-int print_e_version(Elf64_Ehdr *elf_header)
+int print_e_version(elf_t *elf_header)
 {
 	printf("  Version:                           0x%lx\n",
-		(unsigned long)elf_header->e_version);
+		IS_32(elf_header->e64)
+			? (unsigned long)elf_header->e32.e_version
+			: (unsigned long)elf_header->e64.e_version);
 	return (0);
 }
 
@@ -36,11 +38,14 @@ int print_e_version(Elf64_Ehdr *elf_header)
 int print_program_headers(elf_t *elf_header)
 {
 	printf("  Start of program headers:          ");
-	/* endianness */
 	if (IS_32(elf_header->e64))
-		printf("%u", elf_header->e32.e_phoff);
+		printf("%u", IS_BE(elf_header->e64)
+			? switch_endian4(elf_header->e32.e_phoff)
+			: elf_header->e32.e_phoff);
 	else
-		printf("%ld", elf_header->e64.e_phoff);
+		printf("%lu", IS_BE(elf_header->e64)
+			? switch_endian8(elf_header->e64.e_phoff)
+			: elf_header->e64.e_phoff);
 	printf(" (bytes into file)\n");
 	return (0);
 }

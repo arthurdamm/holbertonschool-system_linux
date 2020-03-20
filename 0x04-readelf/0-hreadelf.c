@@ -38,7 +38,7 @@ int main(int ac, char **argv)
 				exit_status = EXIT_FAILURE;
 			}
 		}
-
+		switch_all_endian(&elf_header);
 		exit_status = print_header(&elf_header);
 	}
 

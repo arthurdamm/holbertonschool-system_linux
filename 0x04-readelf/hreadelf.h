@@ -21,6 +21,7 @@
 	"Not an ELF file - it has the wrong magic bytes at the start\n"
 
 #define IS_32(x) ((x).e_ident[EI_CLASS] == ELFCLASS32)
+#define IS_BE(x) ((x).e_ident[EI_DATA] == ELFDATA2MSB)
 #define EGET(x) \
 	(IS_32(elf_header->e64) ? elf_header->e32.x : elf_header->e64.x)
 
@@ -39,6 +40,12 @@ typedef struct Elf
 int open_file(char *name, int silent);
 int check_elf(char *elf_header);
 
+/* endian.c */
+unsigned short switch_endian2(unsigned short n);
+unsigned int switch_endian4(unsigned int n);
+unsigned long switch_endian8(unsigned long n);
+void switch_all_endian(elf_t *elf_header);
+
 /* print_header_1.c */
 int print_header(elf_t *elf_header);
 int print_magic(Elf64_Ehdr *elf_header);
@@ -55,7 +62,7 @@ int print_entry(Elf64_Ehdr *elf_header);
 
 /* print_header_3.c */
 int print_machine(Elf64_Ehdr *elf_header);
-int print_e_version(Elf64_Ehdr *elf_header);
+int print_e_version(elf_t *elf_header);
 int print_program_headers(elf_t *elf_header);
 char *get_machine(Elf64_Ehdr *elf_header);
 char *get_machine2(Elf64_Ehdr *elf_header);
