@@ -20,7 +20,7 @@ int print_osabi(Elf64_Ehdr *elf_header)
 			printf("UNIX - NetBSD");
 			break;
 		case ELFOSABI_LINUX:
-			printf("UNIX - GNU");
+			printf("UNIX - Linux");
 			break;
 		case ELFOSABI_SOLARIS:
 			printf("UNIX - Solaris");
