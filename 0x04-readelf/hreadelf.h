@@ -29,11 +29,16 @@
  * struct Elf - stores 32/64 structs and other data
  * @e64: the 64 bit struct
  * @e32: the 32 bit struct
+ * @s64: the 64 bit struct section array
+ * @s32: the 32 bit struct section array
  */
 typedef struct Elf
 {
 	Elf64_Ehdr e64;
 	Elf32_Ehdr e32;
+	Elf64_Shdr *s64;
+	Elf32_Shdr *s32;
+
 } elf_t;
 
 /* utils.c */
@@ -70,5 +75,9 @@ char *get_machine2(Elf64_Ehdr *elf_header);
 /* print_header_4.c */
 int print_section_headers(elf_t *elf_header);
 int print_flags(elf_t *elf_header);
+
+void read_section_headers(elf_t *elf_header, int fd);
+/* print_sections_1.c */
+int print_sections(elf_t *elf_header);
 
 #endif

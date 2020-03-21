@@ -57,6 +57,7 @@ void switch_all_endian(elf_t *h)
 		h->e64.e_phnum = switch_endian2(h->e64.e_phnum);
 		h->e64.e_shentsize = switch_endian2(h->e64.e_shentsize);
 		h->e64.e_shnum = switch_endian2(h->e64.e_shnum);
+		h->e64.e_shoff = switch_endian8(h->e64.e_shoff);
 		h->e64.e_shstrndx = switch_endian2(h->e64.e_shstrndx);
 	}
 	if (IS_BE(h->e64) && IS_32(h->e64))
@@ -69,6 +70,7 @@ void switch_all_endian(elf_t *h)
 		h->e32.e_phnum = switch_endian2(h->e32.e_phnum);
 		h->e32.e_shentsize = switch_endian2(h->e32.e_shentsize);
 		h->e32.e_shnum = switch_endian2(h->e32.e_shnum);
+		h->e32.e_shoff = switch_endian4(h->e32.e_shoff);
 		h->e32.e_shstrndx = switch_endian2(h->e32.e_shstrndx);
 	}
 }
