@@ -33,3 +33,17 @@ int check_elf(char *elf_header)
 		return (0);
 	return (1);
 }
+
+/**
+ * print_bytes - prints a sequence of bytes in memory
+ * @ptr: starting address
+ * @n: number of bytes to print
+ */
+void print_bytes(void *ptr, size_t n)
+{
+	char *p = ptr;
+
+	while (n--)
+		printf("%2.2hx ", *p++);
+	printf("\n");
+}

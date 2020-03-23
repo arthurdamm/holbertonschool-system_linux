@@ -1,11 +1,11 @@
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -pedantic
+CFLAGS = -Wall -Werror -Wextra -pedantic -std=gnu89
 
 SRC0 = 0-hreadelf.c utils.c endian.c print_header1.c print_header2.c print_header3.c print_header4.c
 OBJ0 = $(SRC0:.c=.o)
 NAME0 = 0-hreadelf
 
-SRC1 = 1-hreadelf.c utils.c endian.c print_sections_1.c
+SRC1 = 1-hreadelf.c utils.c endian.c print_sections_1.c print_sections_2.c
 OBJ1 = $(SRC1:.c=.o)
 NAME1 = 1-hreadelf
 

@@ -24,6 +24,8 @@
 #define IS_BE(x) ((x).e_ident[EI_DATA] == ELFDATA2MSB)
 #define EGET(x) \
 	(IS_32(elf_header->e64) ? elf_header->e32.x : elf_header->e64.x)
+#define SGET(i, x) \
+	(IS_32(elf_header->e64) ? elf_header->s32[i].x : elf_header->s64[i].x)
 
 /**
  * struct Elf - stores 32/64 structs and other data
@@ -44,6 +46,7 @@ typedef struct Elf
 /* utils.c */
 int open_file(char *name, int silent);
 int check_elf(char *elf_header);
+void print_bytes(void *ptr, size_t n);
 
 /* endian.c */
 unsigned short switch_endian2(unsigned short n);
@@ -76,8 +79,15 @@ char *get_machine2(Elf64_Ehdr *elf_header);
 int print_section_headers(elf_t *elf_header);
 int print_flags(elf_t *elf_header);
 
-void read_section_headers(elf_t *elf_header, int fd);
 /* print_sections_1.c */
-int print_sections(elf_t *elf_header);
+int print_section_headers_full(elf_t *elf_header, int fd);
+void read_section_headers(elf_t *elf_header, int fd);
+char *read_string_table(elf_t *elf_header, int fd);
+char *get_section_type(unsigned int sh_type);
+
+/* print_sections_2.c */
+void print_section_headers32(elf_t *elf_header, char *string_table);
+void print_section_headers64(elf_t *elf_header, char *string_table);
+char *get_section_flags(elf_t *elf_header, size_t i);
 
 #endif
