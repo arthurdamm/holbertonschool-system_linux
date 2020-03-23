@@ -71,6 +71,7 @@ int print_osabi_more(Elf64_Ehdr *elf_header)
 			printf("<unknown: %x>", elf_header->e_ident[EI_OSABI]);
 			break;
 	}
+	printf("\n");
 	return (0);
 }
 
@@ -129,32 +130,11 @@ int print_type(Elf64_Ehdr *elf_header)
  * @elf_header: address of elf header struct
  * Return: 0 on success else exit_status
  */
-int print_entry(Elf64_Ehdr *elf_header)
+int print_entry(elf_t *elf_header)
 {
-	int i = 0, len = 0;
-	unsigned char *p = (unsigned char *)&elf_header->e_entry;
-
-	printf("  Entry point address:               0x");
-	if (elf_header->e_ident[EI_DATA] != ELFDATA2MSB)
-	{
-		i = elf_header->e_ident[EI_CLASS] == ELFCLASS64 ? 7 : 3;
-		while (!p[i])
-			i--;
-		printf("%x", p[i--]);
-		for (; i >= 0; i--)
-			printf("%02x", p[i]);
-		printf("\n");
-	}
+	if (IS_32(elf_header->e64))
+		printf("  Entry point address:               0x%lx\n", EGET(e_entry));
 	else
-	{
-		i = 0;
-		len = elf_header->e_ident[EI_CLASS] == ELFCLASS64 ? 7 : 3;
-		while (!p[i])
-			i++;
-		printf("%x", p[i++]);
-		for (; i <= len; i++)
-			printf("%02x", p[i]);
-		printf("\n");
-	}
+		printf("  Entry point address:               0x%lx\n", EGET(e_entry));
 	return (0);
 }

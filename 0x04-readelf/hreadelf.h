@@ -66,7 +66,7 @@ int print_osabi(Elf64_Ehdr *elf_header);
 int print_osabi_more(Elf64_Ehdr *elf_header);
 int print_abiversion(Elf64_Ehdr *elf_header);
 int print_type(Elf64_Ehdr *elf_header);
-int print_entry(Elf64_Ehdr *elf_header);
+int print_entry(elf_t *elf_header);
 
 /* print_header_3.c */
 int print_machine(Elf64_Ehdr *elf_header);

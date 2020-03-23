@@ -17,7 +17,7 @@ int print_header(elf_t *elf_header)
 	print_type(&elf_header->e64);
 	print_machine(&elf_header->e64);
 	print_e_version(elf_header);
-	print_entry(&elf_header->e64);
+	print_entry(elf_header);
 	print_program_headers(elf_header);
 	print_section_headers(elf_header);
 	print_flags(elf_header);
