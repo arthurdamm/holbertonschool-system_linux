@@ -76,3 +76,38 @@ void switch_all_endian(elf_t *h)
 		h->e32.e_shstrndx = switch_endian2(h->e32.e_shstrndx);
 	}
 }
+
+/**
+ * switch_all_endian_section - switches all endians if need be
+ * @h: address of our internal struct
+ * @i: index of this section
+ */
+void switch_all_endian_section(elf_t *h, size_t i)
+{
+	if (IS_BE(h->e64) && !IS_32(h->e64))
+	{
+		h->s64[i].sh_name = switch_endian4(h->s64[i].sh_name);
+		h->s64[i].sh_type = switch_endian4(h->s64[i].sh_type);
+		h->s64[i].sh_flags = switch_endian8(h->s64[i].sh_flags);
+		h->s64[i].sh_addr = switch_endian8(h->s64[i].sh_addr);
+		h->s64[i].sh_offset = switch_endian8(h->s64[i].sh_offset);
+		h->s64[i].sh_size = switch_endian8(h->s64[i].sh_size);
+		h->s64[i].sh_link = switch_endian4(h->s64[i].sh_link);
+		h->s64[i].sh_info = switch_endian4(h->s64[i].sh_info);
+		h->s64[i].sh_addralign = switch_endian8(h->s64[i].sh_addralign);
+		h->s64[i].sh_entsize = switch_endian8(h->s64[i].sh_entsize);
+	}
+	if (IS_BE(h->e64) && IS_32(h->e64))
+	{
+		h->s32[i].sh_name = switch_endian4(h->s32[i].sh_name);
+		h->s32[i].sh_type = switch_endian4(h->s32[i].sh_type);
+		h->s32[i].sh_flags = switch_endian4(h->s32[i].sh_flags);
+		h->s32[i].sh_addr = switch_endian4(h->s32[i].sh_addr);
+		h->s32[i].sh_offset = switch_endian4(h->s32[i].sh_offset);
+		h->s32[i].sh_size = switch_endian4(h->s32[i].sh_size);
+		h->s32[i].sh_link = switch_endian4(h->s32[i].sh_link);
+		h->s32[i].sh_info = switch_endian4(h->s32[i].sh_info);
+		h->s32[i].sh_addralign = switch_endian4(h->s32[i].sh_addralign);
+		h->s32[i].sh_entsize = switch_endian4(h->s32[i].sh_entsize);
+	}
+}

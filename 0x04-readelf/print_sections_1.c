@@ -14,6 +14,7 @@
 int print_section_headers_full(elf_t *elf_header, int fd)
 {
 	char *string_table;
+	size_t i;
 
 	if (!EGET(e_shnum))
 	{
@@ -23,6 +24,8 @@ int print_section_headers_full(elf_t *elf_header, int fd)
 	printf("There are %d section headers, starting at offset 0x%lx:\n",
 		EGET(e_shnum), EGET(e_shoff));
 	read_section_headers(elf_header, fd);
+	for (i = 0; i < EGET(e_shnum); i++)
+		switch_all_endian_section(elf_header, i);
 	string_table = read_string_table(elf_header, fd);
 	printf("\nSection Headers:\n");
 	if (IS_32(elf_header->e64))
@@ -115,6 +118,8 @@ char *get_section_type(unsigned int sh_type)
 	case 0x6ffffffc:		return ("VERDEF");
 	case 0x7ffffffd:		return ("AUXILIARY");
 	case 0x7fffffff:		return ("FILTER");
+	case 0x6ffffff1:		return ("LOOS+ffffff1");
+	case 0x6ffffff3:		return ("LOOS+ffffff3");
 	case SHT_GNU_LIBLIST:	return ("GNU_LIBLIST");
 	default:
 		sprintf(buf, "%08x: <unknown>", sh_type);

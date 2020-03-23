@@ -67,39 +67,32 @@ void print_section_headers64(elf_t *elf_header, char *string_table)
 char *get_section_flags(elf_t *elf_header, size_t i)
 {
 	static char buf[32];
-	unsigned long sh_flags = SGET(i, sh_flags), flag;
+	unsigned long flags = SGET(i, sh_flags);
 	char *p = buf;
 
-	while (sh_flags)
-	{
-		flag = sh_flags & -sh_flags;
-		sh_flags &= ~flag;
-
-		if (flag == SHF_WRITE)
-			*p = 'W';
-		else if (flag == SHF_ALLOC)
-			*p = 'A';
-		else if (flag == SHF_EXECINSTR)
-			*p = 'X';
-		else if (flag == SHF_MERGE)
-			*p = 'M';
-		else if (flag == SHF_STRINGS)
-			*p = 'S';
-		else if (flag == SHF_INFO_LINK)
-			*p = 'I';
-		else if (flag == SHF_LINK_ORDER)
-			*p = 'L';
-		else if (flag == SHF_OS_NONCONFORMING)
-			*p = 'O';
-		else if (flag == SHF_GROUP)
-			*p = 'G';
-		else if (flag == SHF_TLS)
-			*p = 'T';
-		else if (flag == (unsigned long)SHF_EXCLUDE)
-			*p = 'E';
-		/* else if (flag == SHF_COMPRESSED) *p = 'C'; */
-		p++;
-	}
+	if (flags & SHF_WRITE)
+		*p++ = 'W';
+	if (flags & SHF_ALLOC)
+		*p++ = 'A';
+	if (flags & SHF_EXECINSTR)
+		*p++ = 'X';
+	if (flags & SHF_MERGE)
+		*p++ = 'M';
+	if (flags & SHF_STRINGS)
+		*p++ = 'S';
+	if (flags & SHF_INFO_LINK)
+		*p++ = 'I';
+	if (flags & SHF_LINK_ORDER)
+		*p++ = 'L';
+	if (flags & SHF_OS_NONCONFORMING)
+		*p++ = 'O';
+	if (flags & SHF_GROUP)
+		*p++ = 'G';
+	if (flags & SHF_TLS)
+		*p++ = 'T';
+	if (flags & SHF_EXCLUDE)
+		*p++ = 'E';
+	/* if (flags & SHF_COMPRESSED) *p = 'C'; */
 	*p = 0;
 	return (buf);
 }

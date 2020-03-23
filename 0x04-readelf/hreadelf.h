@@ -53,6 +53,7 @@ unsigned short switch_endian2(unsigned short n);
 unsigned int switch_endian4(unsigned int n);
 unsigned long switch_endian8(unsigned long n);
 void switch_all_endian(elf_t *elf_header);
+void switch_all_endian_section(elf_t *h, size_t i);
 
 /* print_header_1.c */
 int print_header(elf_t *elf_header);
