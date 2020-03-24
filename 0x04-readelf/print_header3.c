@@ -37,16 +37,8 @@ int print_e_version(elf_t *elf_header)
  */
 int print_program_headers(elf_t *elf_header)
 {
-	printf("  Start of program headers:          ");
-	if (IS_32(elf_header->e64))
-		printf("%u", IS_BE(elf_header->e64)
-			? switch_endian4(elf_header->e32.e_phoff)
-			: elf_header->e32.e_phoff);
-	else
-		printf("%lu", IS_BE(elf_header->e64)
-			? switch_endian8(elf_header->e64.e_phoff)
-			: elf_header->e64.e_phoff);
-	printf(" (bytes into file)\n");
+	printf("  Start of program headers:          %lu (bytes into file)\n",
+		EGET(e_phoff));
 	return (0);
 }
 

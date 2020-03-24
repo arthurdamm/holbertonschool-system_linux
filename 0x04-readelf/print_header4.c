@@ -7,13 +7,8 @@
  */
 int print_section_headers(elf_t *elf_header)
 {
-	printf("  Start of section headers:          ");
-	/* endianness */
-	if (IS_32(elf_header->e64))
-		printf("%u", elf_header->e32.e_shoff);
-	else
-		printf("%lu", elf_header->e64.e_shoff);
-	printf(" (bytes into file)\n");
+	printf("  Start of section headers:          %lu (bytes into file)\n",
+		EGET(e_shoff));
 	return (0);
 }
 

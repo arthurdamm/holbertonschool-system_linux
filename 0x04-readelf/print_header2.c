@@ -92,36 +92,9 @@ int print_abiversion(Elf64_Ehdr *elf_header)
  * @elf_header: address of elf header struct
  * Return: 0 on success else exit_status
  */
-int print_type(Elf64_Ehdr *elf_header)
+int print_type(elf_t *elf_header)
 {
-	char *p = (char *)&elf_header->e_type;
-	int i = 0;
-
-	printf("  Type:                              ");
-	if (elf_header->e_ident[EI_DATA] == ELFDATA2MSB)
-		i = 1;
-	switch (p[i])
-	{
-		case ET_NONE:
-			printf("NONE (None)");
-			break;
-		case ET_REL:
-			printf("REL (Relocatable file)");
-			break;
-		case ET_EXEC:
-			printf("EXEC (Executable file)");
-			break;
-		case ET_DYN:
-			printf("DYN (Shared object file)");
-			break;
-		case ET_CORE:
-			printf("CORE (Core file)");
-			break;
-		default:
-			printf("<unknown>: %x", p[i]);
-		break;
-	}
-	printf("\n");
+	printf("  Type:                              %s\n", get_type(elf_header));
 	return (0);
 }
 

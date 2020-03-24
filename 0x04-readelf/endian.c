@@ -51,6 +51,7 @@ void switch_all_endian(elf_t *h)
 	{
 		h->e64.e_machine = switch_endian2(h->e64.e_machine);
 		h->e64.e_version = switch_endian4(h->e64.e_version);
+		h->e64.e_type = switch_endian2(h->e64.e_type);
 		h->e64.e_flags = switch_endian4(h->e64.e_flags);
 		h->e64.e_ehsize = switch_endian2(h->e64.e_ehsize);
 		h->e64.e_phentsize = switch_endian2(h->e64.e_phentsize);
@@ -58,6 +59,7 @@ void switch_all_endian(elf_t *h)
 		h->e64.e_shentsize = switch_endian2(h->e64.e_shentsize);
 		h->e64.e_shnum = switch_endian2(h->e64.e_shnum);
 		h->e64.e_shoff = switch_endian8(h->e64.e_shoff);
+		h->e64.e_phoff = switch_endian8(h->e64.e_phoff);
 		h->e64.e_entry = switch_endian8(h->e64.e_entry);
 		h->e64.e_shstrndx = switch_endian2(h->e64.e_shstrndx);
 	}
@@ -65,6 +67,7 @@ void switch_all_endian(elf_t *h)
 	{
 		h->e32.e_machine = switch_endian2(h->e32.e_machine);
 		h->e32.e_version = switch_endian4(h->e32.e_version);
+		h->e32.e_type = switch_endian2(h->e32.e_type);
 		h->e32.e_flags = switch_endian4(h->e32.e_flags);
 		h->e32.e_ehsize = switch_endian2(h->e32.e_ehsize);
 		h->e32.e_phentsize = switch_endian2(h->e32.e_phentsize);
@@ -72,6 +75,7 @@ void switch_all_endian(elf_t *h)
 		h->e32.e_shentsize = switch_endian2(h->e32.e_shentsize);
 		h->e32.e_shnum = switch_endian2(h->e32.e_shnum);
 		h->e32.e_shoff = switch_endian4(h->e32.e_shoff);
+		h->e32.e_phoff = switch_endian4(h->e32.e_phoff);
 		h->e32.e_entry = switch_endian4(h->e32.e_entry);
 		h->e32.e_shstrndx = switch_endian2(h->e32.e_shstrndx);
 	}
