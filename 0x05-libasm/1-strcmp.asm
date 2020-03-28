@@ -9,10 +9,10 @@ asm_strcmp:
 	while:
 	mov rax, rdi
 	mov rdx, rsi
-	cmp BYTE [rax], 0x0
-	je after
 	movzx eax, BYTE [rax]
 	movzx edx, BYTE [rdx]
+	cmp al, 0x0
+	je after
 	cmp al, dl
 	jne after
 	inc rdi
@@ -20,17 +20,10 @@ asm_strcmp:
 	jmp while
 
 	after:
-	mov rax, rdi
-	mov rdx, rsi
-	movzx eax, BYTE [rax]
-	movzx edx, BYTE [rdx]
-
 	cmp al, dl
 	je equal
 	jl less
 	mov RAX, 0x1
-	;mov RAX, [rdi]
-	;sub RAX, [rsi]
 	jmp end
 
 	equal:
