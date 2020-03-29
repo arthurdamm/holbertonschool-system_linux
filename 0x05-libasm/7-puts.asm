@@ -13,8 +13,7 @@ asm_puts:
 	call asm_strlen
 	pop rdi
 	push rdi
-	test rax, rax
-	jz end
+
 	mov r15, rax
 	mov rax, 1
 	mov rdi, 1
