@@ -1,25 +1,22 @@
-BITS 64
-GLOBAL asm_strlen
-
-SECTION .text
+bits 64
+	global asm_strlen
+	section .text
 
 asm_strlen:
-    ; function prologue
-    PUSH RBP
-    MOV RBP, RSP
-    ; save registers
+	; function prologue
+	push rbp
+	mov rbp, rsp
 
-    MOV RAX, 0
-    JMP loop_check
-    loop_body:
-        INC RAX
-        INC RDI
-    loop_check:
-        CMP BYTE [RDI], 0
-        JNE loop_body
-    ; restore registers
+	mov rax, 0
+	jmp loop_check
+	loop_body:
+	inc rax
+	inc rdi
+	loop_check:
+	cmp byte [rdi], 0
+	jne loop_body
 
-    ; function epilogue
-    MOV RSP, RBP
-    POP RBP
-    RET
+	; function epilogue
+	mov rsp, rbp
+	pop rbp
+	ret
