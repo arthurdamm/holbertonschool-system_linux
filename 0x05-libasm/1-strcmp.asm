@@ -1,12 +1,13 @@
 BITS 64
 	global asm_strcmp
 	section .text
+
 asm_strcmp:
 	push rbp
 	mov rbp, rsp
 	push rdx
 
-	while:
+while:
 	mov rax, rdi
 	mov rdx, rsi
 	movzx eax, BYTE [rax]
@@ -19,21 +20,20 @@ asm_strcmp:
 	inc rsi
 	jmp while
 
-	after:
+after:
 	cmp al, dl
 	je equal
 	jl less
 	mov RAX, 0x1
 	jmp end
-
-	equal:
+equal:
 	mov RAX, 0x0
 	jmp end
-	less:
+less:
 	mov RAX, -0x1
-	jmp end	
+	jmp end
 
-	end:
+end:
 	pop rdx
 
 	mov rbp, rsp
