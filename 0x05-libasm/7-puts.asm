@@ -1,5 +1,6 @@
 BITS 64
 	global asm_puts
+	extern asm_strlen
 
 	section .text
 
@@ -9,24 +10,16 @@ asm_puts:
 
 	push r15
 	push rdi
-	xor r15, r15
-	xor rcx, rcx
-
-loop_strlen:
-	cmp BYTE [rdi], 0
-	jz call_write
-	inc rcx
-	inc rdi
-	jmp loop_strlen
-
-call_write:
-	test rcx, rcx
+	call asm_strlen
+	pop rdi
+	push rdi
+	test rax, rax
 	jz end
-	mov r15, rcx
+	mov r15, rax
 	mov rax, 1
 	mov rdi, 1
 	mov rsi, [rsp]
-	mov rdx, rcx
+	mov rdx, r15
 	syscall
 
 end:
