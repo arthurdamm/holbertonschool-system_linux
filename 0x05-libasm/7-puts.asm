@@ -27,7 +27,6 @@ call_write:
 	mov rdi, 1
 	mov rsi, [rsp]
 	mov rdx, rcx
-stopp:
 	syscall
 
 end:
