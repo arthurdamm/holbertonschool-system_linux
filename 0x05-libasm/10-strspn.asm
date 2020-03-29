@@ -19,7 +19,8 @@ while_strspn:
 	mov rdi, rsi
 	mov rsi, [rsp]
 	movzx rsi, BYTE [rsi]
-	call asm_strchr
+	jmp asm_strchr
+back:
 	pop rdi
 	pop rsi
 	test rax, rax
@@ -54,4 +55,4 @@ strchr_found:
 strchr_end:
 	mov rsp, rbp
 	pop rbp
-	ret
+	jmp back
