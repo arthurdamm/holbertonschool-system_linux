@@ -13,7 +13,10 @@ while:
 	movzx eax, BYTE [rax]
 	movzx edx, BYTE [rdx]
 	cmp al, 0x0
+	jne not_both_null
+	cmp dl, 0x0
 	je after
+	not_both_null:
 	; check case
 	cmp al, 65
 	jl case_a_done
