@@ -9,8 +9,6 @@ asm_strstr:
 
 	while:
 	xor rax, rax
-	cmp BYTE [rdi], 0
-	jz end
 	push rdi
 	push rsi
 	jmp _strstr
@@ -20,6 +18,8 @@ asm_strstr:
 	test rax, rax
 	jnz end
 	inc rdi
+	cmp BYTE [rdi], 0
+	jz end
 	jmp while
 
 	end:
@@ -37,11 +37,11 @@ _strstr:
 	_strstr_while:
 	movzx edx, byte [rdi]
 	movzx ecx, byte [rsi]
+	test cl, cl
+	jz _strstr_found
 	cmp dl, cl
 	after:
 	jnz _strstr_not_found
-	test cl, cl
-	jz _strstr_found
 	inc rdi
 	inc rsi
 	jmp _strstr_while
