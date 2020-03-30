@@ -16,10 +16,11 @@ while:
 	je after
 	; check case
 	cmp al, 97
-	jl case_done
+	jl case_a_done
 	cmp al, 122
-	jg case_done
+	jg case_a_done
 	sub al, 32
+	case_a_done:
 	cmp dl, 97
 	jl case_done
 	cmp dl, 122
@@ -37,13 +38,15 @@ after:
 	cmp al, dl
 	je equal
 	jl less
-	mov RAX, 0x1
+	sub al, dl
 	jmp end
 equal:
-	mov RAX, 0x0
+	mov rax, 0x0
 	jmp end
 less:
-	mov RAX, -0x1
+	sub al, dl
+	neg al
+	imul eax, -1
 	jmp end
 
 end:
