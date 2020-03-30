@@ -15,17 +15,17 @@ while:
 	cmp al, 0x0
 	je after
 	; check case
-	cmp al, 97
+	cmp al, 65
 	jl case_a_done
-	cmp al, 122
+	cmp al, 90
 	jg case_a_done
-	sub al, 32
+	add ax, 32
 	case_a_done:
-	cmp dl, 97
+	cmp dl, 65
 	jl case_done
-	cmp dl, 122
+	cmp dl, 90
 	jg case_done
-	sub dl, 32
+	add dx, 32
 
 case_done:
 	cmp al, dl
