@@ -25,9 +25,21 @@ asm_puti_base:
 	call asm_strlen
 	mov rbx, rax	; case 0?
 	cmp rbx, 1
-	jle end
-	after_strlen:
-
+	jnz after_strlen
+	; base is 1
+	mov r14, r15
+	loop_unary:
+	test r15, r15
+	jz done_loop_unary
+	xor rax, rax
+	mov al, BYTE [rsi]
+	push rax
+	dec r15
+	jmp loop_unary
+	done_loop_unary:
+	xor rax, rax	
+	jmp while_n
+after_strlen:
 	; print negative first then make positive
 	cmp r15, 0
 	jge test_zero
