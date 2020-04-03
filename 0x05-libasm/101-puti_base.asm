@@ -25,7 +25,7 @@ asm_puti_base:
 	call asm_strlen
 	mov rbx, rax	; case 0?
 	test rbx, rbx
-	jz end
+	;jz end
 	after_strlen:
 
 	; print negative first then make positive
