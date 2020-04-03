@@ -18,6 +18,8 @@ asm_puti_base:
 	;mov rsi, r12
 	xor rax, rax
 
+	test rsi, rsi
+	jz end
 	; get base string length;
 	mov rdi, rsi
 	call asm_strlen
