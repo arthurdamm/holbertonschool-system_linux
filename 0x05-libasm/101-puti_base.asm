@@ -20,12 +20,26 @@ asm_puti_base:
 
 	test rsi, rsi
 	jz end
+
+	; print negative first then make positive
+	cmp r15, 0
+	jge after_negative
+	imul r15, -1
+	mov r13, 1
+	mov rdi, 45
+	push rbx
+	push rsi
+	call asm_putc
+	pop rsi
+	pop rbx
+
+after_negative:
 	; get base string length;
 	mov rdi, rsi
 	call asm_strlen
 	mov rbx, rax	; case 0?
 	cmp rbx, 1
-	jnz after_strlen
+	jnz test_zero
 	; base is 1
 	mov r14, r15
 	loop_unary:
@@ -37,20 +51,8 @@ asm_puti_base:
 	dec r15
 	jmp loop_unary
 	done_loop_unary:
-	xor rax, rax	
+	xor rax, rax
 	jmp while_n
-after_strlen:
-	; print negative first then make positive
-	cmp r15, 0
-	jge test_zero
-	imul r15, -1
-	mov r13, 1
-	mov rdi, 45
-	push rbx
-	push rsi
-	call asm_putc
-	pop rsi
-	pop rbx
 
 test_zero:
 	; handle case where n == 0
