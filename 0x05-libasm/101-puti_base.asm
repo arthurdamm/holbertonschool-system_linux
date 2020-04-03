@@ -24,8 +24,8 @@ asm_puti_base:
 	mov rdi, rsi
 	call asm_strlen
 	mov rbx, rax	; case 0?
-	test rbx, rbx
-	;jz end
+	cmp rbx, 1
+	jle end
 	after_strlen:
 
 	; print negative first then make positive
