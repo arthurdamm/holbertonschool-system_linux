@@ -18,9 +18,6 @@ asm_puti_base:
 	;mov rsi, r12
 	xor rax, rax
 
-	test rsi, rsi
-	jz end
-
 	; print negative first then make positive
 	cmp r15, 0
 	jge after_negative
@@ -58,7 +55,7 @@ test_zero:
 	; handle case where n == 0
 	test r15, r15
 	jnz while_n
-	mov rdi, 48
+	movzx rdi, BYTE [rsi]
 	call asm_putc
 	mov r13, 1
 
