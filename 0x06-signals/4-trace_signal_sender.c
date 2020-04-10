@@ -10,6 +10,8 @@ void signal_handler(int signum, siginfo_t *siginfo, void *ucontext)
 {
 	printf("SIGQUIT sent by %d\n", siginfo->si_pid);
 	fflush(stdout);
+	(void)signum;
+	(void)ucontext;
 }
 
 /**
