@@ -6,11 +6,10 @@
  * @siginfo: info struct about signal
  * @ucontext: pointer to ucontext_t
  */
-void signal_handler(int signum, siginfo_t *siginfo, void *ucontext)
+void signal_handler(__attribute__((unused))int signum,
+siginfo_t *siginfo, __attribute__((unused))void *ucontext)
 {
 	psiginfo(siginfo, "Caught");
-	(void)signum;
-	(void)ucontext;
 }
 
 /**
