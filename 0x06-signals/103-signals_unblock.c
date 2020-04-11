@@ -15,11 +15,11 @@ int sigset_init(sigset_t *set, int *signals)
 }
 
 /**
- * signals_block - blocks all signals
+ * signals_unblock - unblocks all signals
  * @signals: 0-terminated array of signals
  * Return: 0 on success else -1
  */
-int signals_block(int *signals)
+int signals_unblock(int *signals)
 {
 	sigset_t set;
 
