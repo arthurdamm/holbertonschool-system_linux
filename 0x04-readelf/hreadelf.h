@@ -127,5 +127,6 @@ void read_symbol_table(elf_t *elf_header, int fd, int i);
 char *read_symbol_string_table(elf_t *elf_header, int fd, int i);
 char *get_sym_type(elf_t *elf_header, size_t i);
 char *get_sym_bind(elf_t *elf_header, size_t i);
+char *get_sym_visibility(elf_t *elf_header, size_t i);
 
 #endif

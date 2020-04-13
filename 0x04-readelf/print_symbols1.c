@@ -100,13 +100,18 @@ void print_symbol_table64(elf_t *elf_header, char *string_table, char *sym_strin
 	printf(TITLE_SYMBOL_64, string_table + SGET(section, sh_name), size);
 	for (i = 0; i < size; i++)
 	{
+		char str[16] = {0};
+
+		sprintf(str, "%3d", YGET(i, st_shndx));
 		printf(FORMAT_SYMBOL_64, i,
 			YGET(i, st_value),
 			YGET(i, st_size),
 			get_sym_type(elf_header, i),
 			get_sym_bind(elf_header, i),
-			"ST_OTHER",
-			"NDX",
+			get_sym_visibility(elf_header, i),
+			YGET(i, st_shndx) > 10000 ? "ABS"
+				: YGET(i, st_shndx) == 0 ? "UND"
+				: str,
 			sym_string_table + YGET(i, st_name));
 	}
 	(void)string_table;
@@ -192,5 +197,17 @@ char *get_sym_bind(elf_t *elf_header, size_t i)
 		case STB_LOPROC: return ("LOPROC");
 		case STB_HIPROC: return ("HIPROC");
 		default: return ("UNKNWN");
+	}
+}
+
+char *get_sym_visibility(elf_t *elf_header, size_t i)
+{
+	switch (YGET(i, st_other) & 0x3)
+	{
+		case STV_DEFAULT: return ("DEFAULT");
+		case STV_INTERNAL: return ("INTERNAL");
+		case STV_HIDDEN: return ("HIDDEN");
+		case STV_PROTECTED: return ("PROTECTED");
+		default: return ("UNKNOWN");
 	}
 }
