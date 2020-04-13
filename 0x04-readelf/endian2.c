@@ -40,11 +40,17 @@ void switch_all_endian_symbol(elf_t *h, size_t i)
 {
 	if (IS_BE(h->e64) && !IS_32(h->e64))
 	{
-		
+		h->y64[i].st_name = switch_endian4(h->y64[i].st_name);
+		h->y64[i].st_shndx = switch_endian2(h->y64[i].st_shndx);
+		h->y64[i].st_value = switch_endian8(h->y64[i].st_value);
+		h->y64[i].st_size = switch_endian8(h->y64[i].st_size);
 	}
 	if (IS_BE(h->e64) && IS_32(h->e64))
 	{
-
+		h->y32[i].st_name = switch_endian4(h->y32[i].st_name);
+		h->y32[i].st_shndx = switch_endian2(h->y32[i].st_shndx);
+		h->y32[i].st_value = switch_endian4(h->y32[i].st_value);
+		h->y32[i].st_size = switch_endian4(h->y32[i].st_size);
 	}
 	(void)i;
 }

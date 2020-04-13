@@ -22,7 +22,7 @@
 int print_symbol_table(elf_t *elf_header, int fd)
 {
 	char *string_table, *sym_string_table;
-	size_t i;
+	size_t i, j;
 
 	if (!EGET(e_shnum))
 	{
@@ -32,15 +32,17 @@ int print_symbol_table(elf_t *elf_header, int fd)
 	read_section_headers(elf_header, fd);
 	for (i = 0; i < EGET(e_shnum); i++)
 		switch_all_endian_section(elf_header, i);
-	for (i = 0; i < EGET(e_phnum); i++)
-		switch_all_endian_symbol(elf_header, i);
 	string_table = read_string_table(elf_header, fd);
 	for (i = 0; i < EGET(e_shnum); i++)
 	{
 		if (SGET(i, sh_type) == SHT_DYNSYM ||
 			SGET(i, sh_type) == SHT_SYMTAB)
 		{
+			size_t size = SGET(i, sh_size) / SGET(i, sh_entsize);
+
 			read_symbol_table(elf_header, fd, i);
+			for (j = 0; j < size; j++)
+				switch_all_endian_symbol(elf_header, j);
 			sym_string_table = read_symbol_string_table(elf_header, fd, i + 1);
 			if (IS_64)
 			{
@@ -58,12 +60,6 @@ int print_symbol_table(elf_t *elf_header, int fd)
 			}
 		}
 	}
-	
-	/* if (IS_32(elf_header->e64))
-		print_symbol_table32(elf_header, string_table, fd);
-	else
-		print_symbol_table64(elf_header, string_table, fd); */
-
 	free(string_table);
 	return (0);
 }
