@@ -13,6 +13,10 @@ SRC2 = 2-hreadelf.c utils.c endian.c endian2.c elf1.c print_programs1.c print_pr
 OBJ2 = $(SRC2:.c=.o)
 NAME2 = 2-hreadelf
 
+SRC100 = 100-hreadelf.c utils.c endian.c endian2.c elf1.c print_symbols1.c print_sections_1.c print_sections_2.c
+OBJ100 = $(SRC100:.c=.o)
+NAME100 = 100-hreadelf
+
 .PHONY: all clean oclean flcean re
 
 all: $(OBJ)
@@ -20,18 +24,20 @@ all: $(OBJ)
 	$(CC) $(OBJ0) -o $(NAME0)
 	$(CC) $(OBJ1) -o $(NAME1)
 	$(CC) $(OBJ2) -o $(NAME2)
-
+	$(CC) $(OBJ100) -o $(NAME100)
 clean:
 	$(RM) *~ $(NAME)
 	$(RM) *~ $(NAME0)
 	$(RM) *~ $(NAME1)
 	$(RM) *~ $(NAME2)
+	$(RM) *~ $(NAME100)
 
 oclean:
 	$(RM) $(OBJ)
 	$(RM) $(OBJ0)
 	$(RM) $(OBJ1)
 	$(RM) $(OBJ2)
+	$(RM) $(OBJ100)
 
 fclean: clean oclean
 
@@ -45,3 +51,6 @@ re: oclean all
 
 2-hreadelf: hreadelf.h $(OBJ2)
 	$(CC) $(OBJ2) -o $(NAME2)
+
+100-hreadelf: hreadelf.h $(OBJ100)
+	$(CC) $(OBJ100) -o $(NAME100)

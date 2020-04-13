@@ -22,6 +22,7 @@
 	"Not an ELF file - it has the wrong magic bytes at the start\n"
 
 #define IS_32(x) ((x).e_ident[EI_CLASS] == ELFCLASS32)
+#define IS_64 ((elf_header->e64).e_ident[EI_CLASS] == ELFCLASS64)
 #define IS_BE(x) ((x).e_ident[EI_DATA] == ELFDATA2MSB)
 #define EGET(x) \
 	(IS_32(elf_header->e64) ? elf_header->e32.x : elf_header->e64.x)
@@ -29,6 +30,8 @@
 	(IS_32(elf_header->e64) ? elf_header->s32[i].x : elf_header->s64[i].x)
 #define PGET(i, x) \
 	(IS_32(elf_header->e64) ? elf_header->p32[i].x : elf_header->p64[i].x)
+#define YGET(i, x) \
+	(IS_32(elf_header->e64) ? elf_header->y32[i].x : elf_header->y64[i].x)
 
 /**
  * struct Elf - stores 32/64 structs and other data
@@ -45,6 +48,8 @@ typedef struct Elf
 	Elf32_Shdr *s32;
 	Elf64_Phdr *p64;
 	Elf32_Phdr *p32;
+	Elf64_Sym *y64;
+	Elf32_Sym *y32;
 
 } elf_t;
 
@@ -62,6 +67,7 @@ void switch_all_endian_section(elf_t *h, size_t i);
 
 /* endian2.c */
 void switch_all_endian_program(elf_t *h, size_t i);
+void switch_all_endian_symbol(elf_t *h, size_t i);
 
 /* print_header_1.c */
 int print_header(elf_t *elf_header);
@@ -111,5 +117,15 @@ char *get_segment_type(unsigned long p_type);
 
 /* print_programs2.c */
 int print_section_to_segment_mapping(elf_t *elf_header, char *string_table);
+
+/* print_symbols1.c */
+int print_symbol_table(elf_t *elf_header, int fd);
+void print_symbol_table32(elf_t *elf_header, char *string_table, int fd, int section);
+void print_symbol_table64(elf_t *elf_header, char *string_table, char *sym_string_table,
+	int fd, int section);
+void read_symbol_table(elf_t *elf_header, int fd, int i);
+char *read_symbol_string_table(elf_t *elf_header, int fd, int i);
+char *get_sym_type(elf_t *elf_header, size_t i);
+char *get_sym_bind(elf_t *elf_header, size_t i);
 
 #endif

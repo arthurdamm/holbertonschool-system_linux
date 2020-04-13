@@ -30,3 +30,21 @@ void switch_all_endian_program(elf_t *h, size_t i)
 		h->p32[i].p_flags = switch_endian4(h->p32[i].p_flags);
 	}
 }
+
+/**
+ * switch_all_endian_symbol - switches all endians if need be
+ * @h: address of our internal struct
+ * @i: index of this section
+ */
+void switch_all_endian_symbol(elf_t *h, size_t i)
+{
+	if (IS_BE(h->e64) && !IS_32(h->e64))
+	{
+		
+	}
+	if (IS_BE(h->e64) && IS_32(h->e64))
+	{
+
+	}
+	(void)i;
+}
