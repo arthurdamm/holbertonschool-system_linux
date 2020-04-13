@@ -6,11 +6,13 @@
 
 #define TITLE_SYMBOL_32 \
 	"\nSymbol table '%s' contains %lu entries:\n" \
-	"   Num:    Value          Size Type    Bind   Vis      Ndx Name\n"
+	"   Num:    Value  Size Type    Bind   Vis      Ndx Name\n"
 
 #define FORMAT_SYMBOL_64 \
-	"   %3lu: %16.16lx %5lu %-7s %-6s %-7s %4s %s\n"
+	"  %4lu: %16.16lx %5lu %-7s %-6s %-7s %4s %s\n"
 
+#define FORMAT_SYMBOL_32 \
+	"  %4lu: %8.8lx %5lu %-7s %-6s %-7s %4s %s\n"
 /**
  * print_symbol_table - prints all the symbol table stuff
  * @elf_header: address of elf header struct
@@ -49,6 +51,7 @@ int print_symbol_table(elf_t *elf_header, int fd)
 			}
 			else
 			{
+				print_symbol_table32(elf_header, string_table, sym_string_table, fd, i);
 				free(elf_header->y32);
 				elf_header->y32 = NULL;
 				free(sym_string_table);
@@ -71,18 +74,31 @@ int print_symbol_table(elf_t *elf_header, int fd)
  * @string_table: the string table program
  * @fd: file descriptor of ELF file
  */
-void print_symbol_table32(elf_t *elf_header, char *string_table, int fd, int section)
+void print_symbol_table32(elf_t *elf_header, char *string_table, char *sym_string_table,
+	int fd, int section)
 {
 	size_t i = 0;
+	size_t size = SGET(section, sh_size) / SGET(section, sh_entsize);
 
-	/* printf(TITLE_SYMBOL_32); */
-	for (i = 0; i < EGET(e_phnum); i++)
+	printf(TITLE_SYMBOL_32, string_table + SGET(section, sh_name), size);
+	for (i = 0; i < size; i++)
 	{
-	
+		char str[16] = {0};
+
+		sprintf(str, "%3d", YGET(i, st_shndx));
+		printf(FORMAT_SYMBOL_32, i,
+			YGET(i, st_value),
+			YGET(i, st_size),
+			get_sym_type(elf_header, i),
+			get_sym_bind(elf_header, i),
+			get_sym_visibility(elf_header, i),
+			YGET(i, st_shndx) > 10000 ? "ABS"
+				: YGET(i, st_shndx) == 0 ? "UND"
+				: str,
+			sym_string_table + YGET(i, st_name));
 	}
-	(void)fd;
 	(void)string_table;
-	(void)section;
+	(void)fd;
 }
 
 /**

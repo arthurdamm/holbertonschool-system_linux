@@ -120,7 +120,8 @@ int print_section_to_segment_mapping(elf_t *elf_header, char *string_table);
 
 /* print_symbols1.c */
 int print_symbol_table(elf_t *elf_header, int fd);
-void print_symbol_table32(elf_t *elf_header, char *string_table, int fd, int section);
+void print_symbol_table32(elf_t *elf_header, char *string_table, char *sym_string_table,
+	int fd, int section);
 void print_symbol_table64(elf_t *elf_header, char *string_table, char *sym_string_table,
 	int fd, int section);
 void read_symbol_table(elf_t *elf_header, int fd, int i);
