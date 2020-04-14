@@ -13,7 +13,7 @@ SRC2 = 2-hreadelf.c utils.c endian.c endian2.c elf1.c print_programs1.c print_pr
 OBJ2 = $(SRC2:.c=.o)
 NAME2 = 2-hreadelf
 
-SRC100 = 100-hreadelf.c utils.c endian.c endian2.c elf1.c print_symbols1.c print_sections_1.c print_sections_2.c
+SRC100 = 100-hreadelf.c utils.c endian.c endian2.c elf1.c print_sections_1.c print_sections_2.c print_symbols1.c print_symbols2.c print_symbols3.c
 OBJ100 = $(SRC100:.c=.o)
 NAME100 = 100-hreadelf
 

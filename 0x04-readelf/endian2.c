@@ -54,3 +54,24 @@ void switch_all_endian_symbol(elf_t *h, size_t i)
 	}
 	(void)i;
 }
+
+void switch_all_endian_ver(elf_t *h, uint16_t *versym, size_t versym_size,
+	Elf64_Verneed *verneed, size_t verneed_size)
+{
+	size_t i = 0;
+
+	if (!IS_BE(h->e64))
+		return;
+
+	for (i = 0; i < versym_size; i++)
+		versym[i] = switch_endian2(versym[i]);
+	for (i = 0; i < verneed_size; i++)
+	{
+		verneed[i].vn_version = switch_endian2(verneed[i].vn_version);
+		verneed[i].vn_cnt = switch_endian2(verneed[i].vn_cnt);
+		verneed[i].vn_file = switch_endian4(verneed[i].vn_file);
+		verneed[i].vn_aux = switch_endian4(verneed[i].vn_aux);
+		verneed[i].vn_next = switch_endian4(verneed[i].vn_next);
+	}
+	(void)versym;
+}

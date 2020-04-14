@@ -39,6 +39,10 @@
  * @e32: the 32 bit struct
  * @s64: the 64 bit struct section array
  * @s32: the 32 bit struct section array
+ * @p64: the 64 bit struct program array
+ * @p32: the 32 bit struct program array
+ * @y64: the 64 bit struct symbol array
+ * @y32: the 32 bit struct symbol array
  */
 typedef struct Elf
 {
@@ -68,6 +72,8 @@ void switch_all_endian_section(elf_t *h, size_t i);
 /* endian2.c */
 void switch_all_endian_program(elf_t *h, size_t i);
 void switch_all_endian_symbol(elf_t *h, size_t i);
+void switch_all_endian_ver(elf_t *h, uint16_t *versym, size_t versym_size,
+	Elf64_Verneed *verneed, size_t verneed_size);
 
 /* print_header_1.c */
 int print_header(elf_t *elf_header);
@@ -119,13 +125,29 @@ char *get_segment_type(unsigned long p_type);
 int print_section_to_segment_mapping(elf_t *elf_header, char *string_table);
 
 /* print_symbols1.c */
-int print_symbol_table(elf_t *elf_header, int fd);
-void print_symbol_table32(elf_t *elf_header, char *string_table, char *sym_string_table,
-	int fd, int section);
-void print_symbol_table64(elf_t *elf_header, char *string_table, char *sym_string_table,
-	int fd, int section);
+int print_all_symbol_tables(elf_t *elf_header, int fd);
+void print_symbol_table(elf_t *elf_header, int fd, size_t i,
+	char *string_table);
+void print_symbol_table32(elf_t *elf_header, char *string_table,
+	char *sym_string_table, uint16_t *versym, Elf64_Verneed *verneed,
+	size_t verneed_size, int section);
+void print_symbol_table64(elf_t *elf_header, char *string_table,
+	char *sym_string_table, uint16_t *versym, Elf64_Verneed *verneed,
+	size_t verneed_size, int section);
+void print_verneed_info(elf_t *elf_header, char *sym_string_table,
+	uint16_t *versym, Elf64_Verneed *verneed, size_t verneed_size, size_t i,
+	size_t size, int section);
+
+/* print_symbols2.c */
 void read_symbol_table(elf_t *elf_header, int fd, int i);
 char *read_symbol_string_table(elf_t *elf_header, int fd, int i);
+size_t find_verneed_index(Elf64_Verneed *verneed, size_t verneed_size,
+	size_t index);
+void print_verneed_table(elf_t *elf_header, int fd, int i,
+	char *sym_string_table, uint16_t *versym, Elf64_Verneed *verneed);
+void *read_data(elf_t *elf_header, int fd, unsigned long offset, long size);
+
+/* print_symbols3.c */
 char *get_sym_type(elf_t *elf_header, size_t i);
 char *get_sym_bind(elf_t *elf_header, size_t i);
 char *get_sym_visibility(elf_t *elf_header, size_t i);

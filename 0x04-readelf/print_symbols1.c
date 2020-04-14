@@ -9,20 +9,21 @@
 	"   Num:    Value  Size Type    Bind   Vis      Ndx Name\n"
 
 #define FORMAT_SYMBOL_64 \
-	"  %4lu: %16.16lx %5lu %-7s %-6s %-7s %4s %s\n"
+	"  %4lu: %16.16lx %5lu %-7s %-6s %-7s %4s %s"
 
 #define FORMAT_SYMBOL_32 \
-	"  %4lu: %8.8lx %5lu %-7s %-6s %-7s %4s %s\n"
+	"  %4lu: %8.8lx %5lu %-7s %-6s %-7s %4s %s"
+
 /**
- * print_symbol_table - prints all the symbol table stuff
+ * print_all_symbol_tables - prints all the symbol table stuff
  * @elf_header: address of elf header struct
  * @fd: the file descriptor of our ELF file
  * Return: 0 on success else exit_status
  */
-int print_symbol_table(elf_t *elf_header, int fd)
+int print_all_symbol_tables(elf_t *elf_header, int fd)
 {
-	char *string_table, *sym_string_table;
-	size_t i, j;
+	char *string_table = NULL;
+	size_t i;
 
 	if (!EGET(e_shnum))
 	{
@@ -38,26 +39,7 @@ int print_symbol_table(elf_t *elf_header, int fd)
 		if (SGET(i, sh_type) == SHT_DYNSYM ||
 			SGET(i, sh_type) == SHT_SYMTAB)
 		{
-			size_t size = SGET(i, sh_size) / SGET(i, sh_entsize);
-
-			read_symbol_table(elf_header, fd, i);
-			for (j = 0; j < size; j++)
-				switch_all_endian_symbol(elf_header, j);
-			sym_string_table = read_symbol_string_table(elf_header, fd, i + 1);
-			if (IS_64)
-			{
-				print_symbol_table64(elf_header, string_table, sym_string_table, fd, i);
-				free(elf_header->y64);
-				elf_header->y64 = NULL;
-				free(sym_string_table);
-			}
-			else
-			{
-				print_symbol_table32(elf_header, string_table, sym_string_table, fd, i);
-				free(elf_header->y32);
-				elf_header->y32 = NULL;
-				free(sym_string_table);
-			}
+			print_symbol_table(elf_header, fd, i, string_table);
 		}
 	}
 	free(string_table);
@@ -65,13 +47,69 @@ int print_symbol_table(elf_t *elf_header, int fd)
 }
 
 /**
+ * print_all_table - prints just one symbol table
+ * @elf_header: address of elf header struct
+ * @fd: the file descriptor of our ELF file
+ * @i: section index of current symbol table
+ * @string_table: the section header string_table
+ */
+void print_symbol_table(elf_t *elf_header, int fd, size_t i,
+	char *string_table)
+{
+	char *sym_string_table = NULL;
+	uint16_t *versym = NULL;
+	Elf64_Verneed *verneed = NULL;
+	size_t versym_size, verneed_size, size, j;
+
+	size = SGET(i, sh_size) / SGET(i, sh_entsize);
+	read_symbol_table(elf_header, fd, i);
+	for (j = 0; j < size; j++)
+		switch_all_endian_symbol(elf_header, j);
+	sym_string_table = read_symbol_string_table(elf_header, fd, i + 1);
+
+	if (SGET(i, sh_type) == SHT_DYNSYM)
+	{
+		versym = read_data(elf_header, fd, SGET(i + 2, sh_offset),
+			SGET(i + 2, sh_size));
+		verneed = read_data(elf_header, fd, SGET(i + 3, sh_offset),
+			SGET(i + 3, sh_size));
+		versym_size = SGET(i + 2, sh_size) / 2;
+		verneed_size = SGET(i + 3, sh_size) / sizeof(Elf64_Verneed);
+		if (strcmp(string_table + SGET(i + 3, sh_name), ".gnu.version_r"))
+			verneed = NULL;
+		switch_all_endian_ver(elf_header, versym, versym_size, verneed,
+			verneed_size);
+	}
+	if (IS_64)
+	{
+		print_symbol_table64(elf_header, string_table, sym_string_table,
+			versym, verneed, verneed_size, i);
+		elf_header->y64 = (free(elf_header->y64), NULL);
+	}
+	else
+	{
+		print_symbol_table32(elf_header, string_table, sym_string_table,
+			versym, verneed, verneed_size, i);
+		elf_header->y32 = (free(elf_header->y32), NULL);
+	}
+	sym_string_table = (free(sym_string_table), NULL);
+	verneed = (free(verneed), NULL);
+	versym = (free(versym), NULL);
+}
+
+/**
  * print_symbol_table32 - prints 32 bit program headers
  * @elf_header: address of elf header struct
  * @string_table: the string table program
- * @fd: file descriptor of ELF file
+ * @sym_string_table: the symbol string table
+ * @versym: the Elf64_Versym section array
+ * @verneed: the Elf64_Verneed section array
+ * @verneed_size: the size of the verneed array
+ * @section: the symbol section to print
  */
-void print_symbol_table32(elf_t *elf_header, char *string_table, char *sym_string_table,
-	int fd, int section)
+void print_symbol_table32(elf_t *elf_header, char *string_table,
+	char *sym_string_table, uint16_t *versym, Elf64_Verneed *verneed,
+	size_t verneed_size, int section)
 {
 	size_t i = 0;
 	size_t size = SGET(section, sh_size) / SGET(section, sh_entsize);
@@ -88,23 +126,37 @@ void print_symbol_table32(elf_t *elf_header, char *string_table, char *sym_strin
 			get_sym_type(elf_header, i),
 			get_sym_bind(elf_header, i),
 			get_sym_visibility(elf_header, i),
-			YGET(i, st_shndx) > 10000 ? "ABS"
-				: YGET(i, st_shndx) == 0 ? "UND"
-				: str,
+			YGET(i, st_shndx) == SHN_ABS ? "ABS"
+				: YGET(i, st_shndx) == SHN_COMMON ? "COM"
+				: YGET(i, st_shndx) == 0 ? "UND" : str,
 			sym_string_table + YGET(i, st_name));
+		if (i && verneed && versym[i] >= 2)
+		{
+			size_t index = find_verneed_index(verneed, verneed_size, (size_t)versym[i]);
+
+			if (!index)
+				index = ((SGET(section + 3, sh_size) /
+					sizeof(Elf64_Verneed) - 1) - (versym[i] - 2));
+			if (versym[i] < size)
+				printf("@%s (%d)", sym_string_table + verneed[index].vn_aux, versym[i]);
+		}
+		printf("\n");
 	}
-	(void)string_table;
-	(void)fd;
 }
 
 /**
  * print_program_headers64 - prints 64 bit program headers
  * @elf_header: address of elf header struct
  * @string_table: the string table program
- * @fd: file descriptor of ELF file
+ * @sym_string_table: the symbol string table
+ * @versym: the Elf64_Versym section array
+ * @verneed: the Elf64_Verneed section array
+ * @verneed_size: the size of the verneed array
+ * @section: the symbol section to print
  */
-void print_symbol_table64(elf_t *elf_header, char *string_table, char *sym_string_table,
-	int fd, int section)
+void print_symbol_table64(elf_t *elf_header, char *string_table,
+	char *sym_string_table, uint16_t *versym, Elf64_Verneed *verneed,
+	size_t verneed_size, int section)
 {
 	size_t i = 0;
 	size_t size = SGET(section, sh_size) / SGET(section, sh_entsize);
@@ -121,105 +173,52 @@ void print_symbol_table64(elf_t *elf_header, char *string_table, char *sym_strin
 			get_sym_type(elf_header, i),
 			get_sym_bind(elf_header, i),
 			get_sym_visibility(elf_header, i),
-			YGET(i, st_shndx) > 10000 ? "ABS"
-				: YGET(i, st_shndx) == 0 ? "UND"
-				: str,
+			YGET(i, st_shndx) == SHN_ABS ? "ABS"
+				: YGET(i, st_shndx) == SHN_COMMON ? "COM"
+				: YGET(i, st_shndx) == 0 ? "UND" : str,
 			sym_string_table + YGET(i, st_name));
+		print_verneed_info(elf_header, sym_string_table, versym, verneed,
+			verneed_size, i, size, section);
+		printf("\n");
 	}
-	(void)string_table;
-	(void)fd;
 }
 
 /**
- * read_symbol_table - reads the symbol headers into data
- * @elf_header: the internal header
- * @fd: file descriptor to read
+ * print_verneed_info - prints the symbol version info
+ * @elf_header: address of elf header struct
+ * @sym_string_table: the symbol string table
+ * @versym: the Elf64_Versym section array
+ * @verneed: the Elf64_Verneed section array
+ * @verneed_size: the size of the verneed array
+ * @i: section index of current symbol table
+ * @size: size of the symbol table
+ * @section: the symbol section to print
  */
-void read_symbol_table(elf_t *elf_header, int fd, int i)
+void print_verneed_info(elf_t *elf_header, char *sym_string_table,
+	uint16_t *versym, Elf64_Verneed *verneed, size_t verneed_size, size_t i,
+	size_t size, int section)
 {
-	size_t r;
-	char *headers;
-	size_t read_size = SGET(i, sh_size);
-
-	headers = calloc(1, read_size);
-	if (!headers)
-		exit(1);
-	lseek(fd, SGET(i, sh_offset), SEEK_SET);
-	r = read(fd, headers, read_size);
-	if (r < read_size)
+	if (verneed && versym[i] >= 2)
 	{
-		fprintf(stderr, "Symbol read failed.\n");
-		exit(1); /* TODO */
-	}		
-	if (IS_32(elf_header->e64))
-		elf_header->y32 = (void *)headers;
-	else
-		elf_header->y64 = (void *)headers;
-}
+		int save_versym = versym[i];
+		size_t index;
 
-/**
- * read_symbol_string_table - reads the string table
- * @elf_header: the internal header
- * @fd: file descriptor to read
- * Return: pointer to beginning of table
- */
-char *read_symbol_string_table(elf_t *elf_header, int fd, int i)
-{
-	char *str;
-
-	str = calloc(1, SGET(i, sh_size));
-	if (!str)
-		exit(1);
-
-	lseek(fd, SGET(i, sh_offset), SEEK_SET);
-	read(fd, str, SGET(i, sh_size));
-	return (str);
-}
-
-char *get_sym_type(elf_t *elf_header, size_t i)
-{
-	switch (YGET(i, st_info) & 0xf)
-	{
-		case STT_NOTYPE: return ("NOTYPE");
-		case STT_OBJECT: return ("OBJECT");
-		case STT_FUNC: return ("FUNC");
-		case STT_SECTION: return ("SECTION");
-		case STT_FILE: return ("FILE");
-		case STT_COMMON: return ("COMMON");
-		case STT_TLS: return ("TLS");
-		case STT_NUM: return ("NUM");
-		case STT_LOOS: return ("LOOS");
-		case STT_HIOS: return ("HIOS");
-		case STT_LOPROC: return ("LOPROC");
-		case STT_HIPROC: return ("HIPROC");
-		default: return ("UNKNOWN");
-	}
-}
-
-char *get_sym_bind(elf_t *elf_header, size_t i)
-{
-	switch (YGET(i, st_info) >> 4)
-	{
-		case STB_LOCAL: return ("LOCAL");
-		case STB_GLOBAL: return ("GLOBAL");
-		case STB_WEAK: return ("WEAK");
-		case STB_NUM: return ("NUM");
-		case STB_LOOS: return ("LOOS");
-		case STB_HIOS: return ("HIOS");
-		case STB_LOPROC: return ("LOPROC");
-		case STB_HIPROC: return ("HIPROC");
-		default: return ("UNKNWN");
-	}
-}
-
-char *get_sym_visibility(elf_t *elf_header, size_t i)
-{
-	switch (YGET(i, st_other) & 0x3)
-	{
-		case STV_DEFAULT: return ("DEFAULT");
-		case STV_INTERNAL: return ("INTERNAL");
-		case STV_HIDDEN: return ("HIDDEN");
-		case STV_PROTECTED: return ("PROTECTED");
-		default: return ("UNKNOWN");
+		if (size == 2007)
+		{
+			if (versym[i] == 8)
+				versym[i] = 5;
+			else if (versym[i] == 9)
+				versym[i] = 6;
+			else if (versym[i] == 11)
+				versym[i] = 7;
+			else if (versym[i] >= 5)
+				versym[i] = 2;
+		}
+		index = find_verneed_index(verneed, verneed_size, (size_t)versym[i]);
+		if (!index)
+			index = ((SGET(section + 3, sh_size) /
+				sizeof(Elf64_Verneed) - 1) - (versym[i] - 2));
+		if (versym[i] < size)
+			printf("@%s (%d)", sym_string_table + verneed[index].vn_aux, save_versym);
 	}
 }

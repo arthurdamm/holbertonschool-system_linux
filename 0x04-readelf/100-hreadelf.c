@@ -39,7 +39,7 @@ int main(int ac, char **argv)
 			}
 		}
 		switch_all_endian(&elf_header);
-		exit_status = print_symbol_table(&elf_header, fd);
+		exit_status = print_all_symbol_tables(&elf_header, fd);
 	}
 
 	free(elf_header.s32);
