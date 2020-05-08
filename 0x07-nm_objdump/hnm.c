@@ -23,11 +23,13 @@ int main(int ac, char **argv)
 	r = read(fd, &elf_header.e64, sizeof(elf_header.e64));
 	if (r != sizeof(elf_header.e64) || check_elf((char *)&elf_header.e64))
 	{
-		fprintf(stderr, ERR_NOT_MAGIC);
+		fprintf(stderr, "%s: %s: File format not recognized\n", MYNAME, argv[1]);
 		exit_status = EXIT_FAILURE;
 	}
 	else
 	{
+		size_t num_printed = 0;
+
 		if (IS_32(elf_header.e64))
 		{
 			lseek(fd, 0, SEEK_SET);
@@ -39,7 +41,9 @@ int main(int ac, char **argv)
 			}
 		}
 		switch_all_endian(&elf_header);
-		exit_status = print_all_symbol_tables(&elf_header, fd);
+		exit_status = print_all_symbol_tables(&elf_header, fd, &num_printed);
+		if (!num_printed)
+			fprintf(stderr, "%s: %s: no symbols\n", MYNAME, argv[1]);
 	}
 
 	free(elf_header.s32);

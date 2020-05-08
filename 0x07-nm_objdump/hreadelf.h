@@ -10,16 +10,16 @@
 #include <unistd.h>
 #include <limits.h>
 
-#define USAGE "0-hreadelf elf_filename\n"
-#define MYNAME "0-hreadelf"
+#define USAGE "hnm elf_filename\n"
+#define MYNAME "hnm"
 
-#define ERR_PREFIX MYNAME ": Error: "
+#define ERR_PREFIX MYNAME ": "
 #define ERR_NO_ENTRY ERR_PREFIX \
 	"'%s': No such file\n"
 #define ERR_NO_ACCESS ERR_PREFIX \
 	"Input file '%s' is not readable.\n"
 #define ERR_NOT_MAGIC ERR_PREFIX \
-	"Not an ELF file - it has the wrong magic bytes at the start\n"
+	"File format not recognized\n"
 
 #define IS_32(x) ((x).e_ident[EI_CLASS] == ELFCLASS32)
 #define IS_64 ((elf_header->e64).e_ident[EI_CLASS] == ELFCLASS64)
@@ -125,13 +125,13 @@ char *get_segment_type(unsigned long p_type);
 int print_section_to_segment_mapping(elf_t *elf_header, char *string_table);
 
 /* print_symbols1.c */
-int print_all_symbol_tables(elf_t *elf_header, int fd);
-void print_symbol_table(elf_t *elf_header, int fd, size_t i,
+int print_all_symbol_tables(elf_t *elf_header, int fd, size_t *num_printed);
+size_t print_symbol_table(elf_t *elf_header, int fd, size_t i,
 	char *string_table);
-void print_symbol_table32(elf_t *elf_header, char *string_table,
+size_t print_symbol_table32(elf_t *elf_header, char *string_table,
 	char *sym_string_table, uint16_t *versym, Elf64_Verneed *verneed,
 	size_t verneed_size, int section);
-void print_symbol_table64(elf_t *elf_header, char *string_table,
+size_t print_symbol_table64(elf_t *elf_header, char *string_table,
 	char *sym_string_table, uint16_t *versym, Elf64_Verneed *verneed,
 	size_t verneed_size, int section);
 void print_verneed_info(elf_t *elf_header, char *sym_string_table,
@@ -151,5 +151,8 @@ void *read_data(elf_t *elf_header, int fd, unsigned long offset, long size);
 char *get_sym_type(elf_t *elf_header, size_t i);
 char *get_sym_bind(elf_t *elf_header, size_t i);
 char *get_sym_visibility(elf_t *elf_header, size_t i);
+char get_nm_type32(Elf32_Sym sym, Elf32_Shdr *shdr);
+char get_nm_type64(Elf64_Sym sym, Elf64_Shdr *shdr);
+
 
 #endif
