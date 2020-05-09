@@ -11,9 +11,8 @@
 #include <limits.h>
 
 #define USAGE "hnm elf_filename\n"
-#define MYNAME "hnm"
 
-#define ERR_PREFIX MYNAME ": "
+#define ERR_PREFIX "%s: "
 #define ERR_NO_ENTRY ERR_PREFIX \
 	"'%s': No such file\n"
 #define ERR_NO_ACCESS ERR_PREFIX \
@@ -58,7 +57,7 @@ typedef struct Elf
 } elf_t;
 
 /* utils.c */
-int open_file(char *name, int silent);
+int open_file(char *name, int silent, char **argv);
 int check_elf(char *elf_header);
 void print_bytes(void *ptr, size_t n);
 
@@ -155,6 +154,6 @@ char get_nm_type32(Elf32_Sym sym, Elf32_Shdr *shdr);
 char get_nm_type64(Elf64_Sym sym, Elf64_Shdr *shdr);
 
 /* hnm.c */
-int process_file(char *file_name, int multiple);
+int process_file(char *file_name, int multiple, char **argv);
 
 #endif
