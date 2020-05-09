@@ -15,7 +15,7 @@ int main(int ac, char **argv)
 	if (ac == 2)
 		return (process_file(argv[1], 0));
 	while (*++argv)
-		ret |= process_file(*argv, 1);
+		ret += process_file(*argv, 1);
 	return (ret);
 }
 
