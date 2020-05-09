@@ -11,7 +11,7 @@
 #include <limits.h>
 
 #define USAGE "hnm elf_filename\n"
-#define MYNAME "hnm"
+#define MYNAME "nm"
 
 #define ERR_PREFIX MYNAME ": "
 #define ERR_NO_ENTRY ERR_PREFIX \
