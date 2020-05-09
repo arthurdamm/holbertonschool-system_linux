@@ -11,13 +11,13 @@
 #include <limits.h>
 
 #define USAGE "hnm elf_filename\n"
-#define MYNAME "nm"
+#define MYNAME "hnm"
 
 #define ERR_PREFIX MYNAME ": "
 #define ERR_NO_ENTRY ERR_PREFIX \
 	"'%s': No such file\n"
 #define ERR_NO_ACCESS ERR_PREFIX \
-	"Input file '%s' is not readable.\n"
+	"%s: Permission denied\n"
 #define ERR_NOT_MAGIC ERR_PREFIX \
 	"File format not recognized\n"
 
