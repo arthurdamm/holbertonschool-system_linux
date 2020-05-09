@@ -8,13 +8,15 @@
  */
 int main(int ac, char **argv)
 {
+	int ret = EXIT_SUCCESS;
+
 	if (ac < 2)
 		return (fprintf(stderr, USAGE), EXIT_FAILURE);
 	if (ac == 2)
 		return (process_file(argv[1], 0));
 	while (*++argv)
-		process_file(*argv, 1);
-	return (EXIT_SUCCESS);
+		ret |= process_file(*argv, 1);
+	return (ret);
 }
 
 /**
