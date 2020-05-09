@@ -14,9 +14,9 @@ int open_file(char *name, int silent)
 	if (fd == -1 && !silent)
 	{
 		if (errno == EACCES)
-			fprintf(stderr, ERR_NO_ACCESS, name);
+			fflush(stdout), fprintf(stderr, ERR_NO_ACCESS, name);
 		else if (errno == ENOENT)
-			fprintf(stderr, ERR_NO_ENTRY, name);
+			fflush(stdout), fprintf(stderr, ERR_NO_ENTRY, name);
 	}
 	return (fd);
 }

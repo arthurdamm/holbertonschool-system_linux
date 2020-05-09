@@ -8,22 +8,37 @@
  */
 int main(int ac, char **argv)
 {
+	if (ac < 2)
+		return (fprintf(stderr, USAGE), EXIT_FAILURE);
+	if (ac == 2)
+		return (process_file(argv[1], 0));
+	while (*++argv)
+		process_file(*argv, 1);
+	return (EXIT_SUCCESS);
+}
+
+/**
+ * process_file - displays symbols for 1 file
+ * @file_name: name of file to process
+ * @multiple: 1 if there are multiple files else 0
+ * Return: 0 on success else 1 on error
+ */
+int process_file(char *file_name, int multiple)
+{
 	int fd, exit_status = 0;
 	size_t r, num_printed = 0;
 	elf_t elf_header;
 
 	memset(&elf_header, 0, sizeof(elf_header));
-	if (ac != 2)
-		return (fprintf(stderr, USAGE), EXIT_FAILURE);
 
-	fd = open_file(argv[1], 0);
+	fd = open_file(file_name, 0);
 	if (fd == -1)
 		return (EXIT_FAILURE);
 
 	r = read(fd, &elf_header.e64, sizeof(elf_header.e64));
 	if (r != sizeof(elf_header.e64) || check_elf((char *)&elf_header.e64))
 	{
-		fprintf(stderr, "%s: %s: File format not recognized\n", MYNAME, argv[1]);
+		fprintf(stderr, "%s: %s: File format not recognized\n", MYNAME, file_name);
 		exit_status = EXIT_FAILURE;
 	}
 	else
@@ -33,14 +48,15 @@ int main(int ac, char **argv)
 			lseek(fd, 0, SEEK_SET);
 			r = read(fd, &elf_header.e32, sizeof(elf_header.e32));
 			if (r != sizeof(elf_header.e32) || check_elf((char *)&elf_header.e32))
-				exit_status = fprintf(stderr, ERR_NOT_MAGIC), EXIT_FAILURE;
+				exit_status = fflush(stdout), fprintf(stderr, ERR_NOT_MAGIC), EXIT_FAILURE;
 		}
+		if (multiple)
+			printf("\n%s:\n", file_name);
 		switch_all_endian(&elf_header);
 		exit_status = print_all_symbol_tables(&elf_header, fd, &num_printed);
 		if (!num_printed)
-			fprintf(stderr, "%s: %s: no symbols\n", MYNAME, argv[1]);
+			fprintf(stderr, "%s: %s: no symbols\n", MYNAME, file_name);
 	}
-
 	free(elf_header.s32);
 	free(elf_header.s64);
 	free(elf_header.p32);

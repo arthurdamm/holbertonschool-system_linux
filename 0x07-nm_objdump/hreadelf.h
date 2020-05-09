@@ -154,5 +154,7 @@ char *get_sym_visibility(elf_t *elf_header, size_t i);
 char get_nm_type32(Elf32_Sym sym, Elf32_Shdr *shdr);
 char get_nm_type64(Elf64_Sym sym, Elf64_Shdr *shdr);
 
+/* hnm.c */
+int process_file(char *file_name, int multiple);
 
 #endif
