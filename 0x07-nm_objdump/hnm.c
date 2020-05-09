@@ -9,7 +9,7 @@
 int main(int ac, char **argv)
 {
 	int fd, exit_status = 0;
-	size_t r;
+	size_t r, num_printed = 0;
 	elf_t elf_header;
 
 	memset(&elf_header, 0, sizeof(elf_header));
@@ -28,17 +28,12 @@ int main(int ac, char **argv)
 	}
 	else
 	{
-		size_t num_printed = 0;
-
 		if (IS_32(elf_header.e64))
 		{
 			lseek(fd, 0, SEEK_SET);
 			r = read(fd, &elf_header.e32, sizeof(elf_header.e32));
 			if (r != sizeof(elf_header.e32) || check_elf((char *)&elf_header.e32))
-			{
-				fprintf(stderr, ERR_NOT_MAGIC);
-				exit_status = EXIT_FAILURE;
-			}
+				exit_status = fprintf(stderr, ERR_NOT_MAGIC), EXIT_FAILURE;
 		}
 		switch_all_endian(&elf_header);
 		exit_status = print_all_symbol_tables(&elf_header, fd, &num_printed);
