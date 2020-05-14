@@ -107,7 +107,7 @@ void *read_data(elf_t *elf_header, int fd, unsigned long offset, long size)
 		exit(1);
 	/* printf("Reading [%lu] bytes at offset [%lu]\n", size, offset); */
 	lseek(fd, offset, SEEK_SET);
-	if (read(fd, str, size) < size)
+	if (read(fd, str, size) != size)
 	{
 		fprintf(stderr, "Read error.\n");
 		exit(1);

@@ -35,6 +35,17 @@
 #define YGET(i, x) \
 	(IS_32(elf_header->e64) ? elf_header->y32[i].x : elf_header->y64[i].x)
 
+#define BFD_NO_FLAGS	0x00
+#define HAS_RELOC	0x01
+#define EXEC_P		0x02
+#define HAS_LINENO	0x04
+#define HAS_DEBUG	0x08
+#define HAS_SYMS	0x10
+#define HAS_LOCALS	0x20
+#define DYNAMIC		0x40
+#define WP_TEXT		0x80
+#define D_PAGED		0x100
+
 /**
  * struct Elf - stores 32/64 structs and other data
  * @e64: the 64 bit struct
@@ -164,6 +175,8 @@ int dump_all_sections(elf_t *elf_header, int fd, size_t *num_printed);
 size_t dump_section(elf_t *elf_header, int fd, size_t i,
 	char *string_table);
 char *get_file_format(elf_t *elf_header);
-
+void print_f_header(elf_t *elf_header, char *string_table);
+int has_section(elf_t *elf_header, char *string_table, char *section_name);
+void print_f_flags(unsigned long flags);
 
 #endif
