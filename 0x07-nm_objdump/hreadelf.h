@@ -10,6 +10,9 @@
 #include <unistd.h>
 #include <limits.h>
 
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
 #define USAGE "hnm elf_filename\n"
 
 #define ERR_PREFIX "%s: "
@@ -155,5 +158,12 @@ char get_nm_type64(Elf64_Sym sym, Elf64_Shdr *shdr);
 
 /* hnm.c */
 int process_file(char *file_name, int multiple, char **argv);
+
+/* hobjdump_1.c */
+int dump_all_sections(elf_t *elf_header, int fd, size_t *num_printed);
+size_t dump_section(elf_t *elf_header, int fd, size_t i,
+	char *string_table);
+char *get_file_format(elf_t *elf_header);
+
 
 #endif
