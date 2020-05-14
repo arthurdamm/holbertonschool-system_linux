@@ -55,10 +55,9 @@ int process_file(char *file_name, int multiple, char **argv)
 				exit_status = fprintf(stderr, ERR_NOT_MAGIC, argv[0]), EXIT_FAILURE;
 		}
 		switch_all_endian(&elf_header);
-		printf("\n%s:     file format %s\n", file_name, get_file_format(&elf_header));
+		printf("\n%s:     file format %s\n",
+			file_name, get_file_format(&elf_header));
 		exit_status = dump_all_sections(&elf_header, fd, &num_printed);
-		/* if (!num_printed)
-			fprintf(stderr, "%s: %s: no symbols\n", argv[0], file_name); */
 	}
 	free(elf_header.s32);
 	free(elf_header.s64);

@@ -174,6 +174,8 @@ int process_file(char *file_name, int multiple, char **argv);
 int dump_all_sections(elf_t *elf_header, int fd, size_t *num_printed);
 size_t dump_section(elf_t *elf_header, int fd, size_t i,
 	char *string_table);
+
+/* hobjdump_2.c */
 char *get_file_format(elf_t *elf_header);
 void print_f_header(elf_t *elf_header, char *string_table);
 int has_section(elf_t *elf_header, char *string_table, char *section_name);

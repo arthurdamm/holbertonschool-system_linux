@@ -5,7 +5,7 @@ SRC0 = hnm.c utils.c endian.c endian2.c elf1.c print_sections_1.c print_sections
 OBJ0 = $(SRC0:.c=.o)
 NAME0 = hnm
 
-SRC1 = hobjdump.c utils.c endian.c endian2.c elf1.c print_sections_1.c print_sections_2.c print_symbols2.c hobjdump_1.c
+SRC1 = hobjdump.c utils.c endian.c endian2.c elf1.c print_sections_1.c print_sections_2.c print_symbols2.c hobjdump_1.c hobjdump_2.c
 OBJ1 = $(SRC1:.c=.o)
 NAME1 = hobjdump
 
