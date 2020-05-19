@@ -9,6 +9,7 @@
  */
 void print_python_float(PyObject *p)
 {
+	setbuf(stdout, NULL);
 	printf("[.] float object info\n");
 	if (p->ob_type != &PyFloat_Type)
 	{
@@ -28,6 +29,7 @@ void print_python_bytes(PyObject *p)
 {
 	ssize_t sz, i = 0;
 
+	setbuf(stdout, NULL);
 	printf("[.] bytes object info\n");
 	if (p->ob_type != &PyBytes_Type)
 	{
@@ -54,12 +56,12 @@ void print_python_list(PyObject *p)
 	ssize_t sz, i = 0;
 
 	setbuf(stdout, NULL);
+	printf("%s", "[*] Python list info\n");
 	if (p->ob_type != &PyList_Type)
 	{
 		printf("  [ERROR] Invalid List Object\n");
 		return;
 	}
-	printf("%s", "[*] Python list info\n");
 	sz = ((PyVarObject *)p)->ob_size;
 	printf("[*] Size of the Python List = %ld\n", sz);
 	printf("[*] Allocated = %ld\n", ((PyListObject *)p)->allocated);
