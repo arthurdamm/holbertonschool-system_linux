@@ -11,7 +11,7 @@ void print_python_float(PyObject *p)
 {
 	setbuf(stdout, NULL);
 	printf("[.] float object info\n");
-	if (p->ob_type != &PyFloat_Type)
+	if (!p || p->ob_type != &PyFloat_Type)
 	{
 		printf("  [ERROR] Invalid Float Object\n");
 		return;
@@ -31,7 +31,7 @@ void print_python_bytes(PyObject *p)
 
 	setbuf(stdout, NULL);
 	printf("[.] bytes object info\n");
-	if (p->ob_type != &PyBytes_Type)
+	if (!p || p->ob_type != &PyBytes_Type)
 	{
 		printf("  [ERROR] Invalid Bytes Object\n");
 		return;
@@ -57,7 +57,7 @@ void print_python_list(PyObject *p)
 
 	setbuf(stdout, NULL);
 	printf("%s", "[*] Python list info\n");
-	if (p->ob_type != &PyList_Type)
+	if (!p || p->ob_type != &PyList_Type)
 	{
 		printf("  [ERROR] Invalid List Object\n");
 		return;
