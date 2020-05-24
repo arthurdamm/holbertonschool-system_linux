@@ -19,7 +19,7 @@ void print_python_float(PyObject *p)
 		return;
 	}
 	str = PyOS_double_to_string(((PyFloatObject *)p)->ob_fval,
-			'g', 16, Py_DTSF_ADD_DOT_0, NULL);
+			'r', 0, Py_DTSF_ADD_DOT_0, NULL);
 	printf("  value: %s\n", str);
 }
 
