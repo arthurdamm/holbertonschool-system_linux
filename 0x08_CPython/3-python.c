@@ -9,6 +9,8 @@
  */
 void print_python_float(PyObject *p)
 {
+	char *str;
+
 	setbuf(stdout, NULL);
 	printf("[.] float object info\n");
 	if (!p || p->ob_type != &PyFloat_Type)
@@ -16,9 +18,9 @@ void print_python_float(PyObject *p)
 		printf("  [ERROR] Invalid Float Object\n");
 		return;
 	}
-	printf("  value: %s\n",
-		PyOS_double_to_string(((PyFloatObject *)p)->ob_fval,
-			'r', 0, Py_DTSF_ADD_DOT_0, NULL));
+	str = PyOS_double_to_string(((PyFloatObject *)p)->ob_fval,
+			'g', 16, Py_DTSF_ADD_DOT_0, NULL);
+	printf("  value: %s\n", str);
 }
 
 /**
