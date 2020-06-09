@@ -15,7 +15,8 @@ int main(int ac, char **av, char **envp)
 	unsigned long last_syscall = 0;
 
 	if (ac < 2)
-		return (EXIT_SUCCESS);
+		return (EXIT_FAILURE);
+	setbuf(stdout, NULL);
 	child_pid = fork();
 	if (child_pid == -1)
 	{
