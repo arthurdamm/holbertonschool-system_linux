@@ -1,5 +1,7 @@
 #include "strace.h"
 
+void trace_child(char **av, char **envp);
+
 /**
  * main - entry point
  * @ac: argument count
@@ -15,7 +17,10 @@ int main(int ac, char **av, char **envp)
 	unsigned long last_syscall = 0;
 
 	if (ac < 2)
+	{
+		printf("Usage: %s command [args...]\n", av[0]);
 		return (EXIT_FAILURE);
+	}
 	setbuf(stdout, NULL);
 	child_pid = fork();
 	if (child_pid == -1)
@@ -25,14 +30,10 @@ int main(int ac, char **av, char **envp)
 	}
 	else if (!child_pid)
 	{
-		ptrace(PTRACE_TRACEME, 0, 0, 0);
-		if (execve(av[1], av + 1, envp) == -1)
-		{
-			dprintf(STDERR_FILENO, "Exec failed: %d\n", errno);
-			exit(-1);
-		}
+		trace_child(av, envp);
 	}
-
+	wait(&status);
+	ptrace(PTRACE_SETOPTIONS, child_pid, 0, PTRACE_O_TRACESYSGOOD);
 	do {
 		ptrace(PTRACE_SYSCALL, child_pid, 0, 0);
 		wait(&status);
@@ -49,4 +50,21 @@ int main(int ac, char **av, char **envp)
 		}
 	} while (!WIFEXITED(status));
 	return (0);
+}
+
+
+/**
+ * trace_child - traces child process
+ * @av: argument vector for execve
+ * @envp: environ for execve
+ */
+void trace_child(char **av, char **envp)
+{
+	ptrace(PTRACE_TRACEME, 0, 0, 0);
+	kill(getpid(), SIGSTOP);
+	if (execve(av[1], av + 1, envp) == -1)
+	{
+		dprintf(STDERR_FILENO, "Exec failed: %d\n", errno);
+		exit(-1);
+	}
 }
