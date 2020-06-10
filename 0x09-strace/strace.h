@@ -9,6 +9,6 @@
 #include <sys/wait.h>
 #include <x86_64-linux-gnu/sys/user.h>
 
-#include "syscall_array.h"
+#include "syscalls.h"
 
 #endif
