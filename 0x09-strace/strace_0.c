@@ -32,7 +32,6 @@ int main(int ac, char **av, char **envp)
 	{
 		trace_child(av, envp);
 	}
-	wait(&status);
 	ptrace(PTRACE_SETOPTIONS, child_pid, 0, PTRACE_O_TRACESYSGOOD);
 	do {
 		ptrace(PTRACE_SYSCALL, child_pid, 0, 0);
@@ -61,7 +60,6 @@ int main(int ac, char **av, char **envp)
 void trace_child(char **av, char **envp)
 {
 	ptrace(PTRACE_TRACEME, 0, 0, 0);
-	kill(getpid(), SIGSTOP);
 	if (execve(av[1], av + 1, envp) == -1)
 	{
 		dprintf(STDERR_FILENO, "Exec failed: %d\n", errno);
