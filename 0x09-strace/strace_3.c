@@ -3,7 +3,7 @@
 void trace_child(char **av, char **envp);
 void trace_parent(pid_t child_pid);
 int await_syscall(pid_t child_pid);
-long get_syscall_param(struct user_regs_struct uregs, size_t i);
+unsigned long get_syscall_param(struct user_regs_struct uregs, size_t i);
 
 /**
  * main - entry point
@@ -43,8 +43,7 @@ int main(int ac, char **av, char **envp)
 void trace_child(char **av, char **envp)
 {
 	setbuf(stdout, NULL);
-	printf("execve(%p, %p, %p) = 0\n",
-		(void *)av[1], (void *)(av + 1), (void *)envp);
+	printf("execve(0, 0, 0) = 0\n");
 	ptrace(PTRACE_TRACEME, 0, 0, 0);
 	kill(getpid(), SIGSTOP);
 	if (execve(av[1], av + 1, envp) == -1)
@@ -93,7 +92,7 @@ void trace_parent(pid_t child_pid)
 		if (first && uregs.orig_rax == 59)
 			first = 0;
 		else
-			printf(") = %#lx\n", (long)uregs.rax);
+			printf(") = %#lx\n", (unsigned long)uregs.rax);
 	}
 }
 
@@ -126,7 +125,7 @@ int await_syscall(pid_t child_pid)
  * @i: syscall parameter index
  * Return: value of param
  */
-long get_syscall_param(struct user_regs_struct uregs, size_t i)
+unsigned long get_syscall_param(struct user_regs_struct uregs, size_t i)
 {
 	switch (i)
 	{
