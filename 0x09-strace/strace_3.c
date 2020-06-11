@@ -42,6 +42,9 @@ int main(int ac, char **av, char **envp)
  */
 void trace_child(char **av, char **envp)
 {
+	setbuf(stdout, NULL);
+	printf("execve(%p, %p, %p) = 0\n",
+		(void *)av[1], (void *)(av + 1), (void *)envp);
 	ptrace(PTRACE_TRACEME, 0, 0, 0);
 	kill(getpid(), SIGSTOP);
 	if (execve(av[1], av + 1, envp) == -1)
@@ -68,13 +71,11 @@ void trace_parent(pid_t child_pid)
 			break;
 		memset(&uregs, 0, sizeof(uregs));
 		ptrace(PTRACE_GETREGS, child_pid, 0, &uregs);
-		printf("%s(", syscalls_64_g[uregs.orig_rax].name);
 		if (first && uregs.orig_rax == 59)
-		{
-			printf("0, 0, 0");
-			first = 0;
-		}
+			first = 1;
 		else
+		{
+			printf("%s(", syscalls_64_g[uregs.orig_rax].name);
 			for (i = 0; i < (int)syscalls_64_g[uregs.orig_rax].nb_params; i++)
 			{
 				if (i)
@@ -84,11 +85,15 @@ void trace_parent(pid_t child_pid)
 				else
 					printf("%#lx", get_syscall_param(uregs, i));
 			}
+		}
 		if (await_syscall(child_pid))
 			break;
 		memset(&uregs, 0, sizeof(uregs));
 		ptrace(PTRACE_GETREGS, child_pid, 0, &uregs);
-		printf(") = %#lx\n", (long)uregs.rax);
+		if (first && uregs.orig_rax == 59)
+			first = 0;
+		else
+			printf(") = %#lx\n", (long)uregs.rax);
 	}
 }
 
