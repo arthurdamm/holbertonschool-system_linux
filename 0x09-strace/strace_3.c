@@ -72,6 +72,7 @@ void trace_parent(pid_t child_pid)
 		if (first && uregs.orig_rax == 59)
 		{
 			printf("0, 0, 0");
+			first = 0;
 		}
 		else
 			for (i = 0; i < (int)syscalls_64_g[uregs.orig_rax].nb_params; i++)
