@@ -57,7 +57,7 @@ void trace_child(char **av, char **envp)
  */
 void trace_parent(pid_t child_pid)
 {
-	int status, i;
+	int status, i, first = 1;
 	struct user_regs_struct uregs;
 
 	waitpid(child_pid, &status, 0);
@@ -69,15 +69,20 @@ void trace_parent(pid_t child_pid)
 		memset(&uregs, 0, sizeof(uregs));
 		ptrace(PTRACE_GETREGS, child_pid, 0, &uregs);
 		printf("%s(", syscalls_64_g[uregs.orig_rax].name);
-		for (i = 0; i < (int)syscalls_64_g[uregs.orig_rax].nb_params; i++)
+		if (first && uregs.orig_rax == 59)
 		{
-			if (i)
-				printf(", ");
-			if (syscalls_64_g[uregs.orig_rax].params[i] == VARARGS)
-				printf("...");
-			else
-				printf("%#lx", get_syscall_param(uregs, i));
+			printf("0, 0, 0");
 		}
+		else
+			for (i = 0; i < (int)syscalls_64_g[uregs.orig_rax].nb_params; i++)
+			{
+				if (i)
+					printf(", ");
+				if (syscalls_64_g[uregs.orig_rax].params[i] == VARARGS)
+					printf("...");
+				else
+					printf("%#lx", get_syscall_param(uregs, i));
+			}
 		if (await_syscall(child_pid))
 			break;
 		memset(&uregs, 0, sizeof(uregs));
@@ -125,6 +130,6 @@ long get_syscall_param(struct user_regs_struct uregs, size_t i)
 		case 3: return (uregs.r10);
 		case 4: return (uregs.r8);
 		case 5: return (uregs.r9);
-		default: return -1;
+		default: return (-1);
 	}
 }
