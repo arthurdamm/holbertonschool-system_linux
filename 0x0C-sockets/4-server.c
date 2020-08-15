@@ -72,7 +72,7 @@ int accept_messages(int sd)
 		buf[bytes_read] = 0;
 		printf("Raw request: \"%s\"\n", buf);
 		parse_header(buf);
-		write(client_sd, str, strlen(str));
+		/* write(client_sd, str, strlen(str)); */
 	}
 
 	close(client_sd);
