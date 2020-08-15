@@ -28,7 +28,7 @@ int main(int ac, char **av)
 		perror("bind failure");
 		return (EXIT_FAILURE);
 	}
-	if (listen(sd, 10) < 0)
+	if (listen(sd, 0) < 0)
 	{
 		perror("listen failure");
 		return (EXIT_FAILURE);
@@ -52,7 +52,7 @@ int accept_messages(int sd)
 	int client_sd;
 	struct sockaddr_in client;
 	socklen_t client_size = sizeof(client);
-	char buf[BUF_SIZE + 1];
+	char buf[BUF_SIZE + 1] = {0};
 	ssize_t bytes_read;
 	char *str = "HTTP/1.1 200 OK\r\n\r\n";
 
@@ -66,6 +66,7 @@ int accept_messages(int sd)
 	inet_ntop(AF_INET, &client.sin_addr, buf, INET_ADDRSTRLEN);
 	printf("Client connected: %s\n", buf);
 
+	buf[0] = 0;
 	bytes_read = recv(client_sd, buf, BUF_SIZE, 0);
 	if (bytes_read > 0)
 	{
