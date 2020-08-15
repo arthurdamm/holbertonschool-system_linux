@@ -14,6 +14,7 @@ int main(int ac, char **av)
 	struct sockaddr_in server;
 	int sd;
 
+	setbuf(stdout, NULL);
 	sd = socket(PF_INET, SOCK_STREAM, 0);
 	if (sd < 0)
 	{
