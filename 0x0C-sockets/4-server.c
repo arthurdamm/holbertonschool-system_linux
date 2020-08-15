@@ -54,7 +54,7 @@ int accept_messages(int sd)
 	socklen_t client_size = sizeof(client);
 	char buf[BUF_SIZE + 1];
 	ssize_t bytes_read;
-	char *str = "HTTP/1.1 200 OK\r\n\r\nHOWDY THERE!";
+	char *str = "HTTP/1.1 200 OK\r\n\r\n";
 
 
 	client_sd = accept(sd, (struct sockaddr *)&client, &client_size);
@@ -72,12 +72,11 @@ int accept_messages(int sd)
 		buf[bytes_read] = 0;
 		printf("Raw request: \"%s\"\n", buf);
 		parse_header(buf);
-		/* write(client_sd, str, strlen(str)); */
+		write(client_sd, str, strlen(str));
 	}
 
 	close(client_sd);
 	return (EXIT_SUCCESS);
-	(void)str;
 }
 
 /**
