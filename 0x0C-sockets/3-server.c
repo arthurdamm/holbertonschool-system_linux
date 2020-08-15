@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 #define PORT 12345
-#define BUF_SIZE 8193
+#define BUF_SIZE 8192
 
 int accept_messages(int sd);
 
@@ -57,7 +57,7 @@ int accept_messages(int sd)
 	int client_sd;
 	struct sockaddr_in client;
 	socklen_t client_size = sizeof(client);
-	char buf[BUF_SIZE];
+	char buf[BUF_SIZE + 1];
 	ssize_t bytes_read;
 
 
@@ -70,7 +70,8 @@ int accept_messages(int sd)
 	inet_ntop(AF_INET, &client.sin_addr, buf, INET_ADDRSTRLEN);
 	printf("Client connected: %s\n", buf);
 
-	while ((bytes_read = read(client_sd, buf, BUF_SIZE - 1)) > 0)
+	bytes_read = recv(client_sd, buf, BUF_SIZE, 0);
+	if (bytes_read > 0)
 	{
 		buf[bytes_read] = 0;
 		printf("Message received: \"%s\"\n", buf);
