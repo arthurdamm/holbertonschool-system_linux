@@ -77,6 +77,7 @@ int accept_messages(int sd)
 
 	close(client_sd);
 	return (EXIT_SUCCESS);
+	(void)str;
 }
 
 /**
