@@ -66,13 +66,13 @@ int accept_messages(int sd)
 	inet_ntop(AF_INET, &client.sin_addr, buf, INET_ADDRSTRLEN);
 	printf("Client connected: %s\n", buf);
 
-	bytes_read = read(client_sd, buf, BUF_SIZE - 1);
+	bytes_read = recv(client_sd, buf, BUF_SIZE, 0);
 	if (bytes_read > 0)
 	{
 		buf[bytes_read] = 0;
 		printf("Raw request: \"%s\"\n", buf);
 		parse_header(buf);
-		write(client_sd, str, strlen(str));
+		send(client_sd, str, strlen(str), 0);
 	}
 
 	close(client_sd);
