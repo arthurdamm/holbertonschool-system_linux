@@ -9,6 +9,8 @@ char *trim(char *str)
 {
 	ssize_t j;
 
+	if (!str)
+		return (NULL);
 	while (isspace((unsigned char)*str))
 		str++;
 	for (j = strlen(str) - 1; j >= 0; j--)
