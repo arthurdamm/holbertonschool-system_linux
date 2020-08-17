@@ -33,6 +33,21 @@
 #define KEY_TITLE "title"
 #define KEY_DESCRIPTION "description"
 
+/**
+ * struct Todo - todo linked list structure
+ * @id: id of current todo item
+ * @title: title of current todo item
+ * @description: description of current todo item
+ * @next: next todo item in the linked lists
+ */
+typedef struct Todo
+{
+	int id;
+	char *title;
+	char *description;
+	struct Todo *next;
+} todo_t;
+
 /* server.c */
 int start_server(void);
 int accept_messages(int sd);

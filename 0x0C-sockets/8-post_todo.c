@@ -1,6 +1,7 @@
 #include "http.h"
 
 static int ids;
+static todo_t *todo_root;
 
 int post_request(int client_sd, char *body, short content_length);
 
@@ -77,6 +78,7 @@ int post_request(int client_sd, char *body, short content_length)
 	char *query, *key, *value, *save_ptr1, *save_ptr2,
 		*title = NULL, *description = NULL;
 	char buf1[1024] = {0}, buf2[1024] = {0};
+	todo_t *todo, *node;
 
 	body[content_length] = 0;
 	query = strtok_r(body, "&", &save_ptr1);
@@ -94,8 +96,23 @@ int post_request(int client_sd, char *body, short content_length)
 	if (!title || !description)
 		return (send_response(client_sd, RESPONSE_422));
 
+	todo = calloc(1, sizeof(*todo));
+	if (!todo)
+		return (1);
+	todo->id = ids++;
+	todo->title = strdup(title);
+	todo->description = strdup(description);
+	if (!todo_root)
+		todo_root = todo;
+	else
+	{
+		node = todo_root;
+		while (node->next)
+			node = node->next;
+		node->next = todo;
+	}
 	sprintf(buf2, "{\"" KEY_ID "\":%d,\"" KEY_TITLE "\":\"%s\",\""
-		KEY_DESCRIPTION "\":\"%s\"}", ids++, title, description);
+		KEY_DESCRIPTION "\":\"%s\"}", ids - 1, title, description);
 	sprintf(buf1, RESPONSE_201 CRLF CONTENT_LENGTH ": %lu" CRLF
 		CONTENT_TYPE ": " JSON_TYPE CRLF CRLF "%s", strlen(buf2), buf2);
 	send_response(client_sd, buf1);
