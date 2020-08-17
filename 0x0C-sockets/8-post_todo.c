@@ -114,9 +114,9 @@ int post_request(int client_sd, char *body, short content_length)
 		value = strtok_r(NULL, "=", &save_ptr2);
 		printf("Body param: \"%s\" -> \"%s\"\n", key, value);
 		if (!strcasecmp(key, KEY_TITLE))
-			title = key;
+			title = value;
 		else if (!strcasecmp(key, KEY_DESCRIPTION))
-			description = key;
+			description = value;
 		query = strtok_r(NULL, "&", &save_ptr1);
 	}
 	if (!title || !description)
@@ -124,8 +124,8 @@ int post_request(int client_sd, char *body, short content_length)
 
 	sprintf(buf2, "{\"id\":%d,\"" KEY_TITLE "\":\"%s\",\""
 		KEY_DESCRIPTION "\":\"%s\"}", ids++, title, description);
-	sprintf(buf1, RESPONSE_201 CRLF CONTENT_LENGTH ": %lu" CRLF CRLF "%s",
-		strlen(buf2), buf2);
+	sprintf(buf1, RESPONSE_201 CRLF CONTENT_LENGTH ": %lu" CRLF
+		CONTENT_TYPE ": " JSON_TYPE CRLF CRLF "%s", strlen(buf2), buf2);
 	send_response(client_sd, buf1);
 	return (0);
 }

@@ -24,6 +24,7 @@
 #define CONTENT_TYPE "Content-Type"
 #define CONTENT_LENGTH "Content-Length"
 #define URL_ENCODED "application/x-www-form-urlencoded"
+#define JSON_TYPE "application/json"
 
 #define PATH_TODOS "/todos"
 #define METHOD_POST "POST"
