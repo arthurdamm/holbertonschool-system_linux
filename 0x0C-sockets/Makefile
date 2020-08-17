@@ -9,7 +9,7 @@ SRC1 = 5-server.c
 OBJ1 = $(SRC1:.c=.o)
 NAME1 = todo_api_1
 
-SRC2 = 6-headers.c util.c
+SRC2 = 6-headers.c server.c util.c
 OBJ2 = $(SRC2:.c=.o)
 NAME2 = todo_api_2
 
