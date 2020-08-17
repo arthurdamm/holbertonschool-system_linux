@@ -27,6 +27,7 @@
 #define JSON_TYPE "application/json"
 
 #define PATH_TODOS "/todos"
+#define METHOD_GET "GET"
 #define METHOD_POST "POST"
 
 #define KEY_ID "id"
