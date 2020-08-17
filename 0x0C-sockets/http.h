@@ -1,5 +1,5 @@
-#ifndef HHTTP_H
-#define HHTTP_H
+#ifndef HTTP_H
+#define HTTP_H
 
 #include <arpa/inet.h>
 #include <ctype.h>
@@ -29,10 +29,12 @@
 #define PATH_TODOS "/todos"
 #define METHOD_POST "POST"
 
+#define KEY_ID "id"
 #define KEY_TITLE "title"
 #define KEY_DESCRIPTION "description"
 
 /* server.c */
+int start_server(void);
 int accept_messages(int sd);
 int send_response(int client_sd, char *response);
 int parse_request(int client_sd, char *buf);

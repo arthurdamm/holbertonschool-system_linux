@@ -5,41 +5,14 @@ static int ids;
 int post_request(int client_sd, char *body, short content_length);
 
 /**
- * main - socket server
+ * main - entry point
  * @ac: argument vector
  * @av: argument count
  * Return: SUCCESS or FAILURE
  */
 int main(int ac, char **av)
 {
-	struct sockaddr_in server;
-	int sd;
-
-	setbuf(stdout, NULL);
-	sd = socket(PF_INET, SOCK_STREAM, 0);
-	if (sd < 0)
-	{
-		perror("socket failed");
-		return (EXIT_FAILURE);
-	}
-	server.sin_family = AF_INET;
-	server.sin_port = htons(PORT);
-	server.sin_addr.s_addr = htonl(INADDR_ANY);
-	if (bind(sd, (struct sockaddr *)&server, sizeof(server)) < 0)
-	{
-		perror("bind failure");
-		return (EXIT_FAILURE);
-	}
-	if (listen(sd, BACKLOG) < 0)
-	{
-		perror("listen failure");
-		return (EXIT_FAILURE);
-	}
-	printf("Server listening on port %d\n", ntohs(server.sin_port));
-	while (1)
-		accept_messages(sd);
-	close(sd);
-	return (EXIT_SUCCESS);
+	return (start_server());
 	(void)ac;
 	(void)av;
 }
@@ -92,7 +65,6 @@ int parse_request(int client_sd, char *buf)
 	(void)url_encoded;
 }
 
-
 /**
  * post_request - parses post request
  * @client_sd: the client socket descriptor
@@ -122,7 +94,7 @@ int post_request(int client_sd, char *body, short content_length)
 	if (!title || !description)
 		return (send_response(client_sd, RESPONSE_422));
 
-	sprintf(buf2, "{\"id\":%d,\"" KEY_TITLE "\":\"%s\",\""
+	sprintf(buf2, "{\"" KEY_ID "\":%d,\"" KEY_TITLE "\":\"%s\",\""
 		KEY_DESCRIPTION "\":\"%s\"}", ids++, title, description);
 	sprintf(buf1, RESPONSE_201 CRLF CONTENT_LENGTH ": %lu" CRLF
 		CONTENT_TYPE ": " JSON_TYPE CRLF CRLF "%s", strlen(buf2), buf2);
