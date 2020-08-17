@@ -1,8 +1,5 @@
 #include "http.h"
 
-int accept_messages(int sd);
-void parse_request(char *buf);
-
 /**
  * main - socket server
  * @ac: argument vector
@@ -73,7 +70,7 @@ int accept_messages(int sd)
 	{
 		buf[bytes_read] = 0;
 		printf("Raw request: \"%s\"\n", buf);
-		parse_request(buf);
+		parse_request(client_sd, buf);
 		send(client_sd, str, strlen(str), 0);
 	}
 
@@ -83,9 +80,11 @@ int accept_messages(int sd)
 
 /**
  * parse_request - parses HTTP request
+ * @client_sd: the client socket descriptor
  * @buf: string buffer containing message text
+ * Return: 0 on success else 1
  */
-void parse_request(char *buf)
+int parse_request(int client_sd, char *buf)
 {
 	char *start_line, *path, *header, *body, *query, *key, *value, *save_ptr1,
 		*save_ptr2;
@@ -125,4 +124,6 @@ void parse_request(char *buf)
 			query = strtok_r(NULL, "&", &save_ptr1);
 		}
 	}
+	return (0);
+	(void)client_sd;
 }
