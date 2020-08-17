@@ -18,6 +18,7 @@
 #define RESPONSE_200_NOCRLF "HTTP/1.1 200 OK"
 #define RESPONSE_200 (RESPONSE_200_NOCRLF CRLF CRLF)
 #define RESPONSE_201 "HTTP/1.1 201 Created"
+#define RESPONSE_204 "HTTP/1.1 204 No Content\r\n\r\n"
 #define RESPONSE_404 "HTTP/1.1 404 Not Found\r\n\r\n"
 #define RESPONSE_411 "HTTP/1.1 411 Length Required\r\n\r\n"
 #define RESPONSE_422 "HTTP/1.1 422 Unprocessable Entity\r\n\r\n"
@@ -30,6 +31,7 @@
 #define PATH_TODOS "/todos"
 #define METHOD_GET "GET"
 #define METHOD_POST "POST"
+#define METHOD_DELETE "DELETE"
 
 #define KEY_ID "id"
 #define KEY_TITLE "title"
