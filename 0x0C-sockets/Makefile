@@ -5,7 +5,7 @@ SRC0 = 4-server.c
 OBJ0 = $(SRC0:.c=.o)
 NAME0 = todo_api_0
 
-SRC1 = 5-server.c
+SRC1 = 5-queries.c server.c util.c
 OBJ1 = $(SRC1:.c=.o)
 NAME1 = todo_api_1
 
