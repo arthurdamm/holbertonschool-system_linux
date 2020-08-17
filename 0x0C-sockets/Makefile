@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -pedantic -std=gnu90 -ggdb3
 
-SRC0 = 4-server.c
+SRC0 = 4-request.c server.c util.c
 OBJ0 = $(SRC0:.c=.o)
 NAME0 = todo_api_0
 
