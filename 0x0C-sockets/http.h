@@ -15,7 +15,8 @@
 #define SP " \t"
 #define BACKLOG 8
 
-#define RESPONSE_200 "HTTP/1.1 200 OK\r\n\r\n"
+#define RESPONSE_200_NOCRLF "HTTP/1.1 200 OK"
+#define RESPONSE_200 (RESPONSE_200_NOCRLF CRLF CRLF)
 #define RESPONSE_201 "HTTP/1.1 201 Created"
 #define RESPONSE_404 "HTTP/1.1 404 Not Found\r\n\r\n"
 #define RESPONSE_411 "HTTP/1.1 411 Length Required\r\n\r\n"
